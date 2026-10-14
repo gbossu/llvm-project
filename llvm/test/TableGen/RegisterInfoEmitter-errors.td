@@ -5,6 +5,9 @@
 // RUN: not llvm-tblgen -gen-register-info -I %p/../../include %s -DERROR4 2>&1 | FileCheck %s --check-prefix=ERROR4
 // RUN: not llvm-tblgen -gen-register-bank -I %p/../../include %s -DERROR5 2>&1 | FileCheck %s --check-prefix=ERROR5
 // RUN: not llvm-tblgen -gen-register-info -I %p/../../include %s -DERROR6 2>&1 | FileCheck %s --check-prefix=ERROR6
+// RUN: not llvm-tblgen -gen-register-info -I %p/../../include %s -DERROR7 2>&1 | FileCheck %s --check-prefix=ERROR7
+// RUN: not llvm-tblgen -gen-register-info -I %p/../../include %s -DERROR8 2>&1 | FileCheck %s --check-prefix=ERROR8
+// RUN: not llvm-tblgen -gen-register-info -I %p/../../include %s -DERROR9 2>&1 | FileCheck %s --check-prefix=ERROR9
 
 include "llvm/Target/Target.td"
 
@@ -62,4 +65,30 @@ def R0_R1 : RegisterWithSubRegs<"r0_r1", [R0]> {
 
 #ifdef ERROR6
 // ERROR6: error: SpillStackID out of range [0,255]
+#endif
+
+#ifdef ERROR7
+// ERROR7: error: ClobberedBySubRegs requires a single non-artificial sub-register chain
+def NoRealSubReg : Register<"no_real_subreg"> {
+  let ClobberedBySubRegs = 1;
+}
+#endif
+
+#ifdef ERROR8
+// ERROR8: error: ClobberedBySubRegs requires a single non-artificial sub-register chain
+def TwoRealSubRegs : RegisterWithSubRegs<"two_real_subregs", [R0, R1]> {
+  let SubRegIndices = [sub0, sub1];
+  let ClobberedBySubRegs = 1;
+}
+#endif
+
+#ifdef ERROR9
+// ERROR9: error: ClobberedBySubRegs requires a single non-artificial sub-register chain
+def BranchingChild : RegisterWithSubRegs<"branching_child", [R0, R1]> {
+  let SubRegIndices = [sub0, sub1];
+}
+def ParentWithBranchingChild : RegisterWithSubRegs<"parent", [BranchingChild]> {
+  let SubRegIndices = [sub0];
+  let ClobberedBySubRegs = 1;
+}
 #endif

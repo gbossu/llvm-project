@@ -165,6 +165,7 @@ CodeGenRegister::CodeGenRegister(const Record *R, unsigned Enum)
     : TheDef(R), EnumValue(Enum),
       CostPerUse(R->getValueAsListOfInts("CostPerUse")),
       CoveredBySubRegs(R->getValueAsBit("CoveredBySubRegs")),
+      ClobberedBySubRegs(R->getValueAsBit("ClobberedBySubRegs")),
       Constant(R->getValueAsBit("isConstant")), SubRegsComplete(false),
       SuperRegsComplete(false), TopoSig(~0u) {
   Artificial = R->getValueAsBit("isArtificial");
@@ -710,6 +711,10 @@ struct TupleExpander : SetTheory::Expander {
         // Composite registers are always covered by sub-registers.
         if (Field == "CoveredBySubRegs")
           RV.setValue(BitInit::get(RK, true));
+
+        // A write to one tuple component does not clobber the other members.
+        if (Field == "ClobberedBySubRegs")
+          RV.setValue(BitInit::get(RK, false));
 
         // Copy fields from the RegisterTuples def.
         if (Field == "SubRegIndices") {
@@ -1276,6 +1281,33 @@ CodeGenRegBank::CodeGenRegBank(const RecordKeeper &Records,
   // register-register references.
   for (CodeGenRegister &Reg : Registers)
     Reg.buildObjectGraph(*this);
+
+  // A marked register cannot contain two independently writable descendants.
+  for (const CodeGenRegister &Reg : Registers) {
+    if (!Reg.ClobberedBySubRegs)
+      continue;
+    const CodeGenRegister *SubReg = &Reg;
+    SmallPtrSet<const CodeGenRegister *, 8> Seen;
+    while (SubReg) {
+      if (!Seen.insert(SubReg).second)
+        PrintFatalError(Reg.TheDef->getLoc(),
+                        "ClobberedBySubRegs requires an acyclic sub-register "
+                        "chain");
+      const CodeGenRegister *OnlyRealSubReg = nullptr;
+      unsigned RealSubRegs = 0;
+      for (const CodeGenRegister *Child : SubReg->ExplicitSubRegs) {
+        if (Child->Artificial)
+          continue;
+        ++RealSubRegs;
+        OnlyRealSubReg = Child;
+      }
+      if (RealSubRegs > 1 || (SubReg == &Reg && RealSubRegs != 1))
+        PrintFatalError(Reg.TheDef->getLoc(),
+                        "ClobberedBySubRegs requires a single "
+                        "non-artificial sub-register chain");
+      SubReg = OnlyRealSubReg;
+    }
+  }
 
   // Compute register name map.
   for (CodeGenRegister &Reg : Registers)

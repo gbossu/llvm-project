@@ -61,7 +61,7 @@ def TestRC64 : RegisterClass<"Test", [i64], 64, (add R0R1, R2R3)>;
 // CHECK-NEXT: };
 
 // CHECK: extern const MCRegisterDesc TestTargetRegDesc[] = {
-// CHECK: { 3, 26, 6, 3, 36864, 7, 0, 0 },
+// CHECK: { 3, 26, 6, 3, 36864, 7, 0, 0, 0 },
 
 // CHECK: static const LaneBitmask TestTargetSubRegIndexLaneMaskTable[] = {
 // CHECK-NEXT: LaneBitmask::getAll(),

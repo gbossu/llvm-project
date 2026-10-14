@@ -227,6 +227,11 @@ class Register<string n, list<string> altNames = []> {
   // covered by its sub-register AX.
   bit CoveredBySubRegs = false;
 
+  // A write to any sub-register might clobber other lanes within this register.
+  // The register is expected to have a single non-artificial subreg.
+  // For example, writing AArch64's W0 also zeroes the high half of X0.
+  bit ClobberedBySubRegs = false;
+
   // HWEncoding - The target specific hardware encoding for this register.
   bits<16> HWEncoding = 0;
 

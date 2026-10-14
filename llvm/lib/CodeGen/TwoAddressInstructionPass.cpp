@@ -1894,6 +1894,10 @@ bool TwoAddressInstructionImpl::run() {
         // To   %reg:subidx = COPY %subreg
         unsigned SubIdx = mi->getOperand(3).getImm();
         Register Reg = mi->getOperand(0).getReg();
+        if (!mi->getOperand(1).isUndef() &&
+            TRI->getExtraClobberedLanes(*MRI->getRegClass(Reg), SubIdx).any())
+          reportFatalUsageError("Cannot lower INSERT_SUBREG that clobbers "
+                                "other parts of the pass-through register");
         LaneBitmask LaneMask = TRI->getSubRegIndexLaneMask(SubIdx);
         LiveInterval *LI = LIS ? &LIS->getInterval(Reg) : nullptr;
 
@@ -2014,6 +2018,7 @@ void TwoAddressInstructionImpl::eliminateRegSequence(
   }
 
   LaneBitmask UndefLanes = LaneBitmask::getNone();
+  LaneBitmask DefinedLanes = LaneBitmask::getNone();
   bool DefEmitted = false;
   for (unsigned i = 1, e = MI.getNumOperands(); i < e; i += 2) {
     MachineOperand &UseMO = MI.getOperand(i);
@@ -2040,6 +2045,13 @@ void TwoAddressInstructionImpl::eliminateRegSequence(
           break;
         }
 
+    // Ensure no previous operand gets clobbered by defining this SubIdx.
+    if ((TRI->getExtraClobberedLanes(*MRI->getRegClass(DstReg), SubIdx) &
+         DefinedLanes)
+            .any())
+      reportFatalUsageError(
+          "Cannot lower REG_SEQUENCE operand that clobbers other operands");
+
     // Insert the sub-register copy.
     MachineInstr *CopyMI = BuildMI(*MI.getParent(), MI, MI.getDebugLoc(),
                                    TII->get(TargetOpcode::COPY))
@@ -2054,6 +2066,7 @@ void TwoAddressInstructionImpl::eliminateRegSequence(
       MBBI = CopyMI;
     }
     DefEmitted = true;
+    DefinedLanes |= TRI->getSubRegIndexLaneMask(SubIdx);
 
     LLVM_DEBUG(dbgs() << "Inserted: " << *CopyMI);
   }

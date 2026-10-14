@@ -177,6 +177,7 @@ public:
   unsigned EnumValue;
   std::vector<int64_t> CostPerUse;
   bool CoveredBySubRegs = true;
+  bool ClobberedBySubRegs = false;
   bool HasDisjunctSubRegs = false;
   bool Artificial = true;
   bool Constant = false;

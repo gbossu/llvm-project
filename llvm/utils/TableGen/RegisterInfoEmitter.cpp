@@ -46,6 +46,7 @@
 #include <cstdint>
 #include <deque>
 #include <iterator>
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
@@ -1075,7 +1076,7 @@ void RegisterInfoEmitter::runMCDesc(raw_ostream &OS, raw_ostream &MainOS,
 
   OS << "extern const MCRegisterDesc " << TargetName
      << "RegDesc[] = { // Descriptors\n";
-  OS << "  { " << RegStrings.get("") << ", 0, 0, 0, 0, 0, 0, 0 },\n";
+  OS << "  { " << RegStrings.get("") << ", 0, 0, 0, 0, 0, 0, 0, 0 },\n";
 
   // Emit the register descriptors now.
   i = 0;
@@ -1091,7 +1092,7 @@ void RegisterInfoEmitter::runMCDesc(raw_ostream &OS, raw_ostream &MainOS,
        << ", " << SubRegIdxSeqs.get(SubRegIdxLists[i]) << ", "
        << (Offset << RegUnitBits | FirstRU) << ", "
        << LaneMaskSeqs.get(RegUnitLaneMasks[i]) << ", " << Reg.Constant << ", "
-       << Reg.Artificial << " },\n";
+       << Reg.Artificial << ", " << Reg.ClobberedBySubRegs << " },\n";
     ++i;
   }
   OS << "};\n\n"; // End of register descriptors...
@@ -1549,6 +1550,37 @@ void RegisterInfoEmitter::runTargetHeader(raw_ostream &OS, raw_ostream &MainOS,
   }
 }
 
+/// Compute all lanes written by a subreg def of \p Reg (explicitly or
+/// implicitly through ClobberedBySubRegs).
+/// Note \p Reg might not be ClobberedBySubRegs, but one of its sub-registers
+/// might.
+static LaneBitmask getWrittenMask(const CodeGenRegister &Reg,
+                                  const CodeGenSubRegIndex &Idx,
+                                  LaneBitmask ClassMask) {
+  auto It = Reg.getSubRegs().find(const_cast<CodeGenSubRegIndex *>(&Idx));
+  if (It == Reg.getSubRegs().end())
+    return Idx.LaneMask & ClassMask;
+  const CodeGenRegister &Sub = *It->second;
+
+  LaneBitmask Mask = Idx.LaneMask;
+  auto AddClobberedAncestors = [&](const CodeGenRegister &Component) {
+    for (const CodeGenRegister *Ancestor : Component.getSuperRegs()) {
+      if (!Ancestor->ClobberedBySubRegs)
+        continue;
+      if (Ancestor == &Reg)
+        Mask |= ClassMask;
+      else if (CodeGenSubRegIndex *ParentIdx = Reg.getSubRegIndex(Ancestor))
+        Mask |= ParentIdx->LaneMask;
+    }
+  };
+
+  // Add clobbered lanes for Sub (Reg.Idx) and any of its sub-registers.
+  AddClobberedAncestors(Sub);
+  for (const auto &[_, SubComponent] : Sub.getSubRegs())
+    AddClobberedAncestors(*SubComponent);
+  return Mask & ClassMask;
+}
+
 //
 // runTargetDesc - Output the target register and register file descriptions.
 //
@@ -1642,6 +1674,54 @@ void RegisterInfoEmitter::runTargetDesc(raw_ostream &OS, raw_ostream &MainOS,
     OS << ", // " << Idx.getName() << '\n';
   }
   OS << " };\n\n";
+
+  // Compute TargetRegisterInfo::WrittenLaneMasks. Only emit rows for classes
+  // whose written masks differ from their value masks.
+  BitVector HasWrittenRow(RegisterClasses.size());
+  SmallVector<LaneBitmask, 16> Row;
+  Row.reserve(SubRegIndices.size() + 1);
+  for (const auto &RC : RegisterClasses) {
+    Row.clear();
+    Row.push_back(RC.LaneMask);
+    bool Expanded = false;
+    for (const auto &Idx : SubRegIndices) {
+      LaneBitmask Mask = Idx.LaneMask & RC.LaneMask;
+      if (RC.getSubClassWithSubReg(&Idx)) {
+        // Members can have different clobbers, so conservatively include every
+        // lane that a write to any member can overwrite.
+        for (const CodeGenRegister *Reg : RC.getMembers()) {
+          Mask |= getWrittenMask(*Reg, Idx, RC.LaneMask);
+          if (Mask == RC.LaneMask)
+            break;
+        }
+      }
+      Expanded |= Mask != (Idx.LaneMask & RC.LaneMask);
+      Row.push_back(Mask);
+    }
+    if (!Expanded)
+      continue;
+    HasWrittenRow.set(RC.EnumValue);
+    OS << "static const LaneBitmask " << TargetName << "WrittenLaneMaskRow"
+       << RC.EnumValue << "[] = {\n";
+    for (LaneBitmask Mask : Row) {
+      printMask(OS << "  ", Mask);
+      OS << ",\n";
+    }
+    OS << "};\n";
+  }
+  OS << "static const LaneBitmask *const " << TargetName
+     << "WrittenLaneMaskTable[] = {\n";
+  for (const auto &RC : RegisterClasses) {
+    OS << "  ";
+    if (HasWrittenRow.test(RC.EnumValue))
+      OS << TargetName << "WrittenLaneMaskRow" << RC.EnumValue;
+    else
+      OS << "nullptr";
+    OS << ",\n";
+  }
+  if (RegisterClasses.empty())
+    OS << "  nullptr,\n";
+  OS << "};\n\n";
 
   OS << "\n";
 
@@ -1960,6 +2040,7 @@ void RegisterInfoEmitter::runTargetDesc(raw_ostream &OS, raw_ostream &MainOS,
   : TargetRegisterInfo(&{1}RegInfoDesc,
       {1}SubRegIndexStrings, {1}SubRegIndexNameOffsets,
       {1}SubRegIdxRangeTable, {1}SubRegIndexLaneMaskTable,
+      {1}WrittenLaneMaskTable,
 
   )",
                 ClassName, TargetName);

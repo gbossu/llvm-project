@@ -132,7 +132,8 @@ def W30   : AArch64Reg<30, "w30">, DwarfRegNum<[30]>;
 def WSP   : AArch64Reg<31, "wsp">, DwarfRegNum<[31]>;
 def WZR   : AArch64Reg<31, "wzr">, DwarfRegAlias<WSP> { let isConstant = true; }
 
-let SubRegIndices = [sub_32, sub_32_hi], CoveredBySubRegs = 1 in {
+let SubRegIndices = [sub_32, sub_32_hi], CoveredBySubRegs = 1,
+    ClobberedBySubRegs = 1 in {
 def X0    : AArch64Reg<0,   "x0",  [W0,  W0_HI]>, DwarfRegAlias<W0>;
 def X1    : AArch64Reg<1,   "x1",  [W1,  W1_HI]>, DwarfRegAlias<W1>;
 def X2    : AArch64Reg<2,   "x2",  [W2,  W2_HI]>, DwarfRegAlias<W2>;
@@ -357,7 +358,7 @@ def B29   : AArch64Reg<29, "b29">, DwarfRegNum<[93]>;
 def B30   : AArch64Reg<30, "b30">, DwarfRegNum<[94]>;
 def B31   : AArch64Reg<31, "b31">, DwarfRegNum<[95]>;
 
-let SubRegIndices = [bsub, bsub_hi] in {
+let SubRegIndices = [bsub, bsub_hi], ClobberedBySubRegs = 1 in {
 def H0    : AArch64Reg<0,   "h0", [B0, B0_HI]>, DwarfRegAlias<B0>;
 def H1    : AArch64Reg<1,   "h1", [B1, B1_HI]>, DwarfRegAlias<B1>;
 def H2    : AArch64Reg<2,   "h2", [B2, B2_HI]>, DwarfRegAlias<B2>;
@@ -392,7 +393,7 @@ def H30   : AArch64Reg<30, "h30", [B30, B30_HI]>, DwarfRegAlias<B30>;
 def H31   : AArch64Reg<31, "h31", [B31, B31_HI]>, DwarfRegAlias<B31>;
 }
 
-let SubRegIndices = [hsub, hsub_hi] in {
+let SubRegIndices = [hsub, hsub_hi], ClobberedBySubRegs = 1 in {
 def S0    : AArch64Reg<0,   "s0", [H0, H0_HI]>, DwarfRegAlias<B0>;
 def S1    : AArch64Reg<1,   "s1", [H1, H1_HI]>, DwarfRegAlias<B1>;
 def S2    : AArch64Reg<2,   "s2", [H2, H2_HI]>, DwarfRegAlias<B2>;
@@ -427,7 +428,8 @@ def S30   : AArch64Reg<30, "s30", [H30, H30_HI]>, DwarfRegAlias<B30>;
 def S31   : AArch64Reg<31, "s31", [H31, H31_HI]>, DwarfRegAlias<B31>;
 }
 
-let SubRegIndices = [ssub, ssub_hi], RegAltNameIndices = [vreg, vlist1] in {
+let SubRegIndices = [ssub, ssub_hi], RegAltNameIndices = [vreg, vlist1],
+    ClobberedBySubRegs = 1 in {
 def D0    : AArch64Reg<0,   "d0", [S0, S0_HI], ["v0", ""]>, DwarfRegAlias<B0>;
 def D1    : AArch64Reg<1,   "d1", [S1, S1_HI], ["v1", ""]>, DwarfRegAlias<B1>;
 def D2    : AArch64Reg<2,   "d2", [S2, S2_HI], ["v2", ""]>, DwarfRegAlias<B2>;
@@ -462,7 +464,8 @@ def D30   : AArch64Reg<30, "d30", [S30, S30_HI], ["v30", ""]>, DwarfRegAlias<B30
 def D31   : AArch64Reg<31, "d31", [S31, S31_HI], ["v31", ""]>, DwarfRegAlias<B31>;
 }
 
-let SubRegIndices = [dsub, dsub_hi], RegAltNameIndices = [vreg, vlist1] in {
+let SubRegIndices = [dsub, dsub_hi], RegAltNameIndices = [vreg, vlist1],
+    ClobberedBySubRegs = 1 in {
 def Q0    : AArch64Reg<0,   "q0", [D0, D0_HI], ["v0", ""]>, DwarfRegAlias<B0>;
 def Q1    : AArch64Reg<1,   "q1", [D1, D1_HI], ["v1", ""]>, DwarfRegAlias<B1>;
 def Q2    : AArch64Reg<2,   "q2", [D2, D2_HI], ["v2", ""]>, DwarfRegAlias<B2>;
@@ -913,7 +916,7 @@ let SubRegIndices = [psub] in {
 }
 
 // SVE variable-size vector registers
-let SubRegIndices = [zsub, zsub_hi] in {
+let SubRegIndices = [zsub, zsub_hi], ClobberedBySubRegs = 1 in {
 def Z0    : AArch64Reg<0,   "z0",  [Q0, Q0_HI]>, DwarfRegNum<[96]>;
 def Z1    : AArch64Reg<1,   "z1",  [Q1, Q1_HI]>, DwarfRegNum<[97]>;
 def Z2    : AArch64Reg<2,   "z2",  [Q2, Q2_HI]>, DwarfRegNum<[98]>;

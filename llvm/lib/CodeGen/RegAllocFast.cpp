@@ -2033,11 +2033,21 @@ void RegAllocFastImpl::expandSubregPseudo(MachineInstr &MI) {
     // %d = INSERT_SUBREG %base, %sub, idx  ->  %d = COPY %base
     //                                          %d.idx = COPY %sub
     const MachineOperand &BaseMO = MI.getOperand(1);
+    bool BaseIsKnownUndef = BaseMO.isUndef();
+    if (!BaseIsKnownUndef && BaseMO.getReg().isVirtual())
+      if (MachineInstr *DefMI = MRI->getUniqueVRegDef(BaseMO.getReg()))
+        BaseIsKnownUndef = DefMI->isImplicitDef();
+    unsigned SubIdx = MI.getOperand(3).getImm();
+    if (!BaseIsKnownUndef &&
+        TRI->getExtraClobberedLanes(
+               *MRI->getRegClass(MI.getOperand(0).getReg()), SubIdx)
+            .any())
+      reportFatalUsageError("Cannot lower INSERT_SUBREG that clobbers "
+                            "other parts of the pass-through register");
     if (!BaseMO.isUndef())
       BuildMI(MBB, MI, DL, TII->get(TargetOpcode::COPY),
               MI.getOperand(0).getReg())
           .addReg(BaseMO.getReg(), RegState::NoFlags, BaseMO.getSubReg());
-    unsigned SubIdx = MI.getOperand(3).getImm();
     MI.removeOperand(3);
     assert(MI.getOperand(0).getSubReg() == 0 && "Unexpected subreg idx");
     MI.getOperand(0).setSubReg(SubIdx);
@@ -2066,6 +2076,10 @@ void RegAllocFastImpl::expandSubregPseudo(MachineInstr &MI) {
     if (SrcMO.isUndef() &&
         (ReadLanes & TRI->getSubRegIndexLaneMask(SubIdx)).none())
       continue;
+    if (DefEmitted &&
+        TRI->getExtraClobberedLanes(*MRI->getRegClass(Dst), SubIdx).any())
+      reportFatalUsageError(
+          "Cannot lower REG_SEQUENCE operand that clobbers other operands");
     BuildMI(MBB, MI, DL, TII->get(TargetOpcode::COPY))
         .addReg(Dst, RegState::Define | getUndefRegState(!DefEmitted), SubIdx)
         .addReg(SrcMO.getReg(), getUndefRegState(SrcMO.isUndef()),

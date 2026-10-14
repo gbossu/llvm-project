@@ -95,6 +95,10 @@ private:
 
   // Pointer to array of lane masks, one per sub-reg index.
   const LaneBitmask *SubRegIndexLaneMasks;
+  // Optional LaneBitMask[RC][SubRegIdx] array which indicates all lanes
+  // (explicitly or implicitly through ClobberedBySubRegs) written by a subreg
+  // def.
+  const LaneBitmask *const *WrittenLaneMasks;
 
   LaneBitmask CoveringLanes;
   const RegClassInfo *const RCInfos;
@@ -107,6 +111,7 @@ protected:
                      ArrayRef<uint32_t> SubRegIndexNameOffsets,
                      const SubRegCoveredBits *SubRegIdxRanges,
                      const LaneBitmask *SubRegIndexLaneMasks,
+                     const LaneBitmask *const *WrittenLaneMasks,
                      LaneBitmask CoveringLanes,
                      const RegClassInfo *const RCInfos,
                      const MVT::SimpleValueType *const RCVTLists,
@@ -249,6 +254,28 @@ public:
   LaneBitmask getSubRegIndexLaneMask(unsigned SubIdx) const {
     assert(SubIdx < getNumSubRegIndices() && "This is not a subregister index");
     return SubRegIndexLaneMasks[SubIdx];
+  }
+
+  /// Lanes physically overwritten when writing SubIdx of a register in RC.
+  /// This is not the lane mask of a virtual subregister definition: a MIR
+  /// subregister def preserves the other lanes unless its operand is undef.
+  LaneBitmask getWrittenLaneMask(const TargetRegisterClass &RC,
+                                 unsigned SubIdx) const {
+    assert(SubIdx < getNumSubRegIndices() && "Invalid subregister index");
+    if (!SubIdx)
+      return RC.getLaneMask();
+    const LaneBitmask *Row = WrittenLaneMasks[RC.getID()];
+    return Row ? Row[SubIdx]
+               : getSubRegIndexLaneMask(SubIdx) & RC.getLaneMask();
+  }
+
+  /// Lanes beyond getSubRegIndexLaneMask what get clobbered when writing
+  /// SubIdx.
+  LaneBitmask getExtraClobberedLanes(const TargetRegisterClass &RC,
+                                     unsigned SubIdx) const {
+    if (!SubIdx)
+      return LaneBitmask::getNone();
+    return getWrittenLaneMask(RC, SubIdx) & ~getSubRegIndexLaneMask(SubIdx);
   }
 
   /// Try to find one or more subregister indexes to cover \p LaneMask.

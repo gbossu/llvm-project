@@ -279,6 +279,10 @@ struct MCRegisterDesc {
 
   // Is true for artificial registers.
   bool IsArtificial;
+
+  // Is true when a write to any sub-register might clobber other lanes within
+  // this one.
+  bool ClobberedBySubRegs;
 };
 
 /// MCRegisterInfo base class - We assume that the target defines a static
@@ -526,6 +530,10 @@ public:
   /// pointer to this object.
   const MCRegisterDesc &get(MCRegister Reg) const {
     return operator[](Reg);
+  }
+
+  bool isClobberedBySubRegs(MCRegister Reg) const {
+    return get(Reg).ClobberedBySubRegs;
   }
 
   /// Returns the physical register number of sub-register "Index"

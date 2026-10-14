@@ -52,13 +52,15 @@ TargetRegisterInfo::TargetRegisterInfo(
     const TargetRegisterInfoDesc *ID, const char *SubRegIndexStrings,
     ArrayRef<uint32_t> SubRegIndexNameOffsets,
     const SubRegCoveredBits *SubRegIdxRanges,
-    const LaneBitmask *SubRegIndexLaneMasks, LaneBitmask CoveringLanes,
+    const LaneBitmask *SubRegIndexLaneMasks,
+    const LaneBitmask *const *WrittenLaneMasks, LaneBitmask CoveringLanes,
     const RegClassInfo *const RCInfos,
     const MVT::SimpleValueType *const RCVTLists, unsigned Mode)
     : InfoDesc(ID), SubRegIndexStrings(SubRegIndexStrings),
       SubRegIndexNameOffsets(SubRegIndexNameOffsets),
       SubRegIdxRanges(SubRegIdxRanges),
-      SubRegIndexLaneMasks(SubRegIndexLaneMasks), CoveringLanes(CoveringLanes),
+      SubRegIndexLaneMasks(SubRegIndexLaneMasks),
+      WrittenLaneMasks(WrittenLaneMasks), CoveringLanes(CoveringLanes),
       RCInfos(RCInfos), RCVTLists(RCVTLists), HwMode(Mode) {}
 
 TargetRegisterInfo::~TargetRegisterInfo() = default;
