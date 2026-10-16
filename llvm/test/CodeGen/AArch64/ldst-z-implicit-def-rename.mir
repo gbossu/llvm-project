@@ -1,0 +1,44 @@
+# RUN: llc -mtriple=aarch64--linux-gnu -enable-subreg-liveness -run-pass=aarch64-ldst-opt -verify-machineinstrs -o - %s | FileCheck %s
+
+# The no-SVE fixed-length extension loads can reach this pass as two loads
+# into d0. Pairing them requires renaming the first load and its implicit def.
+# A Q implicit def permits d1; a Z implicit def restricts the replacement to
+# an even-numbered Z register, so the first available D register is d2.
+
+---
+name:            pair_q_implicit_def
+tracksRegLiveness: true
+stack:
+  - { id: 0, type: default, offset: -16, size: 16, alignment: 16 }
+  - { id: 1, type: default, offset: -32, size: 16, alignment: 16 }
+body:             |
+  bb.0:
+    liveins: $lr
+    ; CHECK-LABEL: name: pair_q_implicit_def
+    ; CHECK: $d1, renamable $d0 = LDPDi $sp, 0, implicit-def $q1, implicit-def $q0
+    ; CHECK-NEXT: STPDi killed renamable $d0, killed $d1, $sp, 2
+    renamable $d0 = LDRDui $sp, 0, implicit-def renamable $q0 :: (load (s64) from %stack.0, align 16)
+    STRDui killed renamable $d0, $sp, 3 :: (store (s64) into %stack.1 + 8)
+    renamable $d0 = LDRDui $sp, 1, implicit-def renamable $q0 :: (load (s64) from %stack.0 + 8)
+    STRDui killed renamable $d0, $sp, 2 :: (store (s64) into %stack.1, align 16)
+    RET_ReallyLR
+...
+
+---
+name:            pair_z_implicit_def
+tracksRegLiveness: true
+stack:
+  - { id: 0, type: default, offset: -16, size: 16, alignment: 16 }
+  - { id: 1, type: default, offset: -32, size: 16, alignment: 16 }
+body:             |
+  bb.0:
+    liveins: $lr
+    ; CHECK-LABEL: name: pair_z_implicit_def
+    ; CHECK: $d2, renamable $d0 = LDPDi $sp, 0, implicit-def $z2, implicit-def $z0
+    ; CHECK-NEXT: STPDi killed renamable $d0, killed $d2, $sp, 2
+    renamable $d0 = LDRDui $sp, 0, implicit-def renamable $z0 :: (load (s64) from %stack.0, align 16)
+    STRDui killed renamable $d0, $sp, 3 :: (store (s64) into %stack.1 + 8)
+    renamable $d0 = LDRDui $sp, 1, implicit-def renamable $z0 :: (load (s64) from %stack.0 + 8)
+    STRDui killed renamable $d0, $sp, 2 :: (store (s64) into %stack.1, align 16)
+    RET_ReallyLR
+...

@@ -439,7 +439,6 @@ public:
   void addMachineSSAOptimization() override;
   bool addILPOpts() override;
   void addPreRegAlloc() override;
-  void addPostRewrite() override;
   void addPostRegAlloc() override;
   void addPreSched2() override;
   void addPreEmitPass() override;
@@ -707,11 +706,6 @@ void AArch64PassConfig::addPreRegAlloc() {
   }
   if (TM->getOptLevel() != CodeGenOptLevel::None && CLOpts.enable_pipeliner)
     addPass(&MachinePipelinerID);
-}
-
-void AArch64PassConfig::addPostRewrite() {
-  if (CLOpts.srlt_mitigate_sr2r)
-    addPass(createAArch64SRLTDefineSuperRegsLegacyPass());
 }
 
 void AArch64PassConfig::addPostRegAlloc() {

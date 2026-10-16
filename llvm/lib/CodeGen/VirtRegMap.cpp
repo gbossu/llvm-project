@@ -16,6 +16,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/CodeGen/VirtRegMap.h"
+#include "llvm/ADT/BitVector.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/LiveDebugVariables.h"
@@ -225,6 +226,9 @@ class VirtRegRewriter {
   bool ClearVirtRegs;
 
   void rewrite();
+  void addWrittenSuperRegDefs(
+      MachineInstr &MI,
+      ArrayRef<std::pair<MCRegister, unsigned>> WrittenDefs) const;
   void addMBBLiveIns();
   bool readsUndefSubreg(const MachineInstr &MI, const MachineOperand &MO) const;
   void addLiveInsForSubRanges(const LiveInterval &LI, MCRegister PhysReg) const;
@@ -661,6 +665,9 @@ void VirtRegRewriter::rewrite() {
        MBBI != MBBE; ++MBBI) {
     LLVM_DEBUG(MBBI->print(dbgs(), Indexes));
     for (MachineInstr &MI : llvm::make_early_inc_range(MBBI->instrs())) {
+      // The physical register bounds added defs to the original virtual
+      // register's class; the index identifies the written subregister.
+      SmallVector<std::pair<MCRegister, unsigned>, 4> WrittenDefs;
       for (MachineOperand &MO : MI.operands()) {
         // Make sure MRI knows about registers clobbered by regmasks.
         if (MO.isRegMask())
@@ -680,6 +687,12 @@ void VirtRegRewriter::rewrite() {
 
         // Preserve semantics of sub-register operands.
         unsigned SubReg = MO.getSubReg();
+        bool ClobbersWithinClass =
+            SubReg != 0 && !NoSubRegLiveness && MO.isDef() &&
+            TRI->getExtraClobberedLanes(*MRI->getRegClass(VirtReg), SubReg)
+                .any();
+        if (ClobbersWithinClass)
+          WrittenDefs.emplace_back(PhysReg, SubReg);
         if (SubReg != 0) {
           if (NoSubRegLiveness || !MRI->shouldTrackSubRegLiveness(VirtReg)) {
             // A virtual register kill refers to the whole register, so we may
@@ -766,6 +779,10 @@ void VirtRegRewriter::rewrite() {
       while (!SuperDefs.empty())
         MI.addRegisterDefined(SuperDefs.pop_back_val(), TRI);
 
+      // Physical operands no longer carry subregister indexes, so add the
+      // enclosing defs before copy expansion can remove this instruction.
+      addWrittenSuperRegDefs(MI, WrittenDefs);
+
       LLVM_DEBUG(dbgs() << "> " << MI);
 
       expandCopyBundle(MI);
@@ -786,6 +803,69 @@ void VirtRegRewriter::rewrite() {
   }
 
   RewriteRegs.clear();
+}
+
+void VirtRegRewriter::addWrittenSuperRegDefs(
+    MachineInstr &MI,
+    ArrayRef<std::pair<MCRegister, unsigned>> WrittenDefs) const {
+  if (WrittenDefs.empty() || MI.getOpcode() == TargetOpcode::PATCHPOINT ||
+      MI.isImplicitDef() || MI.isIdentityCopy())
+    return;
+
+  SmallVector<Register, 4> SuperRegs;
+  for (auto [PhysReg, SubRegIdx] : WrittenDefs) {
+    MCRegister Reg = TRI->getSubReg(PhysReg, SubRegIdx);
+    if (TRI->isConstant(Reg))
+      continue;
+
+    SmallVector<MCRegister, 4> ClobberedAncestors;
+    for (MCRegister Sub : TRI->subregs_inclusive(Reg))
+      for (MCRegister Ancestor : TRI->superregs(Sub))
+        if (TRI->isClobberedBySubRegs(Ancestor) &&
+            !llvm::is_contained(ClobberedAncestors, Ancestor))
+          ClobberedAncestors.push_back(Ancestor);
+    if (ClobberedAncestors.empty())
+      continue;
+
+    BitVector WrittenUnits(TRI->getNumRegUnits());
+    for (MCRegUnit Unit : TRI->regunits(Reg))
+      WrittenUnits.set(static_cast<unsigned>(Unit));
+    for (MCRegister Ancestor : ClobberedAncestors)
+      for (MCRegUnit Unit : TRI->regunits(Ancestor))
+        WrittenUnits.set(static_cast<unsigned>(Unit));
+
+    // Lane bits can be reused across tuple components. Check real register
+    // units as well, so a write to X0 does not claim to define an X tuple.
+    Register Widest;
+    for (MCRegister Super : TRI->superregs(Reg)) {
+      if (!TRI->isSubRegisterEq(PhysReg, Super) ||
+          TRI->isConstant(Super) ||
+          llvm::any_of(TRI->regunits(Super), [&](MCRegUnit Unit) {
+            return !TRI->isArtificialRegUnit(Unit) &&
+                   !WrittenUnits.test(static_cast<unsigned>(Unit));
+          }))
+        continue;
+      if (!Widest || TRI->isSuperRegister(Widest, Super))
+        Widest = Super;
+    }
+    if (Widest && !llvm::is_contained(SuperRegs, Widest) &&
+        !MI.definesRegister(Widest, TRI))
+      SuperRegs.push_back(Widest);
+  }
+
+  for (Register Super : SuperRegs) {
+    bool IsRenamable = llvm::any_of(MI.defs(), [&](const MachineOperand &MO) {
+      return MO.isRenamable() && TRI->regsOverlap(MO.getReg(), Super);
+    });
+    bool IsDead = llvm::any_of(MI.defs(), [&](const MachineOperand &MO) {
+      return MO.isDead() && TRI->regsOverlap(MO.getReg(), Super);
+    });
+    MI.addOperand(MachineOperand::CreateReg(
+        Super, /*isDef=*/true, /*isImp=*/true, /*isKill=*/false,
+        /*isDead=*/IsDead, /*isUndef=*/false, /*isEarlyClobber=*/false,
+        /*SubReg=*/0, /*isDebug=*/false, /*isInternalRead=*/false,
+        /*isRenamable=*/IsRenamable));
+  }
 }
 
 void VirtRegRewriterPass::printPipeline(

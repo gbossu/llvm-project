@@ -6,6 +6,9 @@
 //
 //===----------------------------------------------------------------------===//
 //
+// Deprecated: VirtRegRewriter now adds these defs using ClobberedBySubRegs.
+// This pass remains available to existing explicit -run-pass users.
+//
 // When SubRegister Liveness Tracking (SRLT) is enabled, this pass adds
 // extra implicit-def's to instructions that define the low N bits of
 // a GPR/FPR register to also define the top bits, because all AArch64

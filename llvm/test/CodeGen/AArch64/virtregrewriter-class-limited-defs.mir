@@ -1,0 +1,106 @@
+# RUN: llc -mtriple=aarch64 -enable-subreg-liveness=true -run-pass=virt-reg-rewriter -verify-machineinstrs -o - %s | FileCheck %s --check-prefixes=CHECK,SRL
+# RUN: llc -mtriple=aarch64 -enable-subreg-liveness=false -run-pass=virt-reg-rewriter -verify-machineinstrs -o - %s | FileCheck %s --check-prefixes=CHECK,NOSRL
+
+# Rewriting a full virtual-register def must not add implicit defs outside its
+# register class. A subregister def can define the rest of that class when the
+# target's write mask says those lanes are clobbered. Without subregister
+# liveness, the existing partial-def path adds the same def without renamable.
+# Already physical defs are left alone by the virtual-register rewriter.
+
+---
+name: phys_gpr32
+isSSA: false
+tracksRegLiveness: true
+body: |
+  bb.0:
+    liveins: $w1
+    ; CHECK-LABEL: name: phys_gpr32
+    ; CHECK: $w0 = ORRWrr $wzr, $w1{{$}}
+    ; CHECK-NEXT: RET_ReallyLR
+    $w0 = ORRWrr $wzr, $w1
+    RET_ReallyLR
+...
+
+---
+name: phys_fpr64
+isSSA: false
+tracksRegLiveness: true
+body: |
+  bb.0:
+    liveins: $x0
+    ; CHECK-LABEL: name: phys_fpr64
+    ; CHECK: $d0 = LDRDui $x0, 0 :: (load (s64)){{$}}
+    ; CHECK-NEXT: RET_ReallyLR
+    $d0 = LDRDui $x0, 0 :: (load (s64))
+    RET_ReallyLR
+...
+
+---
+name: fpr64_full
+isSSA: false
+tracksRegLiveness: true
+registers:
+  - { id: 0, class: fpr64, assigned-phys: '$d0' }
+body: |
+  bb.0:
+    liveins: $x0
+    ; CHECK-LABEL: name: fpr64_full
+    ; CHECK: renamable $d0 = LDRDui $x0, 0 :: (load (s64))
+    ; CHECK-NEXT: STRDui killed renamable $d0
+    %0:fpr64 = LDRDui $x0, 0 :: (load (s64))
+    STRDui killed %0, $x0, 1 :: (store (s64))
+    RET_ReallyLR
+...
+
+---
+name: fpr128_full
+isSSA: false
+tracksRegLiveness: true
+registers:
+  - { id: 0, class: fpr128, assigned-phys: '$q0' }
+body: |
+  bb.0:
+    liveins: $x0
+    ; CHECK-LABEL: name: fpr128_full
+    ; CHECK: renamable $q0 = LDRQui $x0, 0 :: (load (s128))
+    ; CHECK-NEXT: STRQui killed renamable $q0
+    %0:fpr128 = LDRQui $x0, 0 :: (load (s128))
+    STRQui killed %0, $x0, 1 :: (store (s128))
+    RET_ReallyLR
+...
+
+---
+name: fpr128_dsub
+isSSA: false
+tracksRegLiveness: true
+registers:
+  - { id: 0, class: fpr128, assigned-phys: '$q0' }
+body: |
+  bb.0:
+    liveins: $x0
+    ; CHECK-LABEL: name: fpr128_dsub
+    ; SRL: renamable $d0 = LDRDui $x0, 0, implicit-def renamable $q0
+    ; NOSRL: renamable $d0 = LDRDui $x0, 0, implicit-def $q0
+    ; CHECK-NEXT: STRQui killed renamable $q0
+    undef %0.dsub:fpr128 = LDRDui $x0, 0 :: (load (s64))
+    STRQui killed %0, $x0, 1 :: (store (s128))
+    RET_ReallyLR
+...
+
+---
+name: gpr64_sub32
+isSSA: false
+tracksRegLiveness: true
+registers:
+  - { id: 0, class: gpr64, assigned-phys: '$x0' }
+body: |
+  bb.0:
+    liveins: $x1
+    ; CHECK-LABEL: name: gpr64_sub32
+    ; SRL: renamable $w0 = LDRWui $x1, 0, implicit-def renamable $x0
+    ; NOSRL: renamable $w0 = LDRWui $x1, 0, implicit-def $x0
+    ; CHECK-NEXT: STRXui killed renamable $x0
+    undef %0.sub_32:gpr64 = LDRWui $x1, 0 :: (load (s32))
+    STRXui killed %0, $x1, 1 :: (store (s64))
+    RET_ReallyLR
+...
