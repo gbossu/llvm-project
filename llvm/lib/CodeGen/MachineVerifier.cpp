@@ -351,6 +351,8 @@ struct MachineVerifier {
                           SlotIndex DefIdx, const LiveRange &LR,
                           VirtRegOrUnit VRegOrUnit, bool SubRangeCheck = false,
                           LaneBitmask LaneMask = LaneBitmask::getNone());
+  void checkClobberingSubregDef(const MachineOperand *MO, unsigned MONum,
+                                SlotIndex DefIdx, const LiveInterval &LI);
 
   void markReachable(const MachineBasicBlock *MBB);
   void calcRegsPassed();
@@ -3063,6 +3065,55 @@ void MachineVerifier::checkLivenessAtDef(const MachineOperand *MO,
   }
 }
 
+void MachineVerifier::checkClobberingSubregDef(const MachineOperand *MO,
+                                               unsigned MONum, SlotIndex DefIdx,
+                                               const LiveInterval &LI) {
+  if (!LI.hasSubRanges() || !MO->getSubReg() || MO->isUndef() ||
+      MO->getParent()->isImplicitDef())
+    return;
+
+  Register Reg = MO->getReg();
+  const TargetRegisterClass &RC = *MRI->getRegClass(Reg);
+  LaneBitmask ImplicitClobbers = TRI->getWrittenLaneMask(RC, MO->getSubReg()) &
+                                 ~TRI->getSubRegIndexLaneMask(MO->getSubReg());
+  if (ImplicitClobbers.none())
+    return;
+
+  for (const LiveInterval::SubRange &SR : LI.subranges()) {
+    // Check whether this subrange contains some implicitely clobbered lanes.
+    // If those lanes were supposed to be live through the instruction, we have
+    // a problem.
+    LaneBitmask ClobberedLanes = SR.LaneMask & ImplicitClobbers;
+    if (ClobberedLanes.none())
+      continue;
+
+    LiveQueryResult Q = SR.Query(DefIdx);
+    bool IsLiveThrough = Q.valueIn() && Q.valueOut() == Q.valueIn();
+    if (IsLiveThrough) {
+      // Clobbering a value directly supplied by IMPLICIT_DEF is harmless.
+      // However, SUBREG_TO_REG does count as full register definitions
+      // according to LiveIntervals. The error report below might thus be
+      // overzealous because clobbering implicitly-defined lanes is fine.
+      const MachineInstr *DefMI =
+          LiveInts->getInstructionFromIndex(Q.valueIn()->def);
+      if (DefMI && DefMI->isImplicitDef())
+        continue;
+      // Reloads may define lanes that were undefined when spilled. Without
+      // tracking those lanes through the spill slot, conservatively allow
+      // clobbering them.
+      if (DefMI) {
+        auto RestoreSize = DefMI->getFoldedRestoreSize(TII);
+        if (RestoreSize && !RestoreSize->isZero())
+          continue;
+      }
+      report("Subregister write clobbers a live-through lane", MO, MONum);
+      report_context_lanemask(ClobberedLanes);
+      report_context_liverange(SR);
+      return;
+    }
+  }
+}
+
 void MachineVerifier::checkLiveness(const MachineOperand *MO, unsigned MONum) {
   const MachineInstr *MI = MO->getParent();
   const Register Reg = MO->getReg();
@@ -3221,6 +3272,7 @@ void MachineVerifier::checkLiveness(const MachineOperand *MO, unsigned MONum) {
 
       if (Reg.isVirtual()) {
         checkLivenessAtDef(MO, MONum, DefIdx, *LI, VirtRegOrUnit(Reg));
+        checkClobberingSubregDef(MO, MONum, DefIdx, *LI);
 
         if (LI->hasSubRanges()) {
           LaneBitmask MOMask = SubRegIdx != 0

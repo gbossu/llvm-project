@@ -1,0 +1,39 @@
+# RUN: llc -mtriple=aarch64 -run-pass=liveintervals \
+# RUN:   -verify-machineinstrs -enable-subreg-liveness=true -o /dev/null %s
+
+
+# Reloads make previously undefined lanes appear defined. Conservatively allow
+# subsequent subregister writes to clobber those lanes.
+
+---
+name: spill
+tracksRegLiveness: true
+stack:
+  - { id: 0, type: spill-slot, size: 16, alignment: 16 }
+body: |
+  bb.0:
+    undef %0.ssub:fpr128 = FMOVS0
+    STRQui %0, %stack.0, 0 :: (store (s128) into %stack.0)
+    %1:fpr128 = LDRQui %stack.0, 0 :: (load (s128) from %stack.0)
+    %2:fpr32 = FMOVS0
+    %1.ssub:fpr128 = nofpexcept FMULSrr %1.ssub, %2, implicit $fpcr
+    STRQui %1, %stack.0, 0 :: (store (s128) into %stack.0)
+    RET_ReallyLR
+...
+---
+name: tuple_spill
+tracksRegLiveness: true
+stack:
+  - { id: 0, type: spill-slot, size: 48, alignment: 16 }
+body: |
+  bb.0:
+    liveins: $q0, $q2, $d1, $x0
+    undef %0.qsub0:qqq = COPY $q0
+    %0.qsub2:qqq = COPY $q2
+    %0.dsub1:qqq = COPY $d1
+    ST1Threev2d %0, %stack.0 :: (store (s384) into %stack.0)
+    %1:qqq = LD1Threev2d %stack.0 :: (load (s384) from %stack.0)
+    %1.dsub1:qqq = LDRDui $x0, 0
+    ST1Threev2d %1, %stack.0 :: (store (s384) into %stack.0)
+    RET_ReallyLR
+...
