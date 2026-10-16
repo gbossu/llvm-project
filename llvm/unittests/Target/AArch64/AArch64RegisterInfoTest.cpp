@@ -2,6 +2,7 @@
 #include "AArch64InstrInfo.h"
 #include "AArch64Subtarget.h"
 #include "AArch64TargetMachine.h"
+#include "llvm/ADT/SmallVector.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
@@ -152,6 +153,40 @@ TEST(AArch64LaneBitmasks, SubRegs) {
   EXPECT_EQ(TRI.getSubReg(AArch64::X0_X1, AArch64::sub_32), AArch64::W0);
   EXPECT_EQ(TRI.getSubReg(AArch64::X0_X1, AArch64::subo64_then_sub_32),
             AArch64::W1);
+}
+
+TEST(AArch64LaneBitmasks, CoveringSubRegIndexes) {
+  std::unique_ptr<TargetMachine> TM = createTargetMachine("");
+  ASSERT_TRUE(TM);
+
+  std::unique_ptr<AArch64InstrInfo> II = createInstrInfo(TM.get());
+  ASSERT_TRUE(II);
+
+  const AArch64RegisterInfo &TRI = II->getRegisterInfo();
+  SmallVector<unsigned, 2> Indexes;
+
+  // There is no sequence of subregs that only covers Lanes while not clobbering
+  // each other. E.g. here writing hsub would also clobber ssub/ssub_hi.
+  LaneBitmask Lanes = TRI.getSubRegIndexLaneMask(AArch64::hsub) |
+                      TRI.getSubRegIndexLaneMask(AArch64::ssub_hi);
+  EXPECT_FALSE(
+      TRI.getCoveringSubRegIndexes(&AArch64::FPR64RegClass, Lanes, Indexes));
+
+  // These are the same lanes in the second Q register of a QQQ tuple.
+  Lanes = TRI.getSubRegIndexLaneMask(AArch64::dsub1_then_hsub) |
+          TRI.getSubRegIndexLaneMask(AArch64::dsub1_then_ssub_hi);
+  Indexes.clear();
+  EXPECT_FALSE(
+      TRI.getCoveringSubRegIndexes(&AArch64::QQQRegClass, Lanes, Indexes));
+
+  Lanes = TRI.getSubRegIndexLaneMask(AArch64::qsub0) |
+          TRI.getSubRegIndexLaneMask(AArch64::dsub1_then_hsub) |
+          TRI.getSubRegIndexLaneMask(AArch64::qsub2);
+  Indexes.clear();
+  EXPECT_TRUE(
+      TRI.getCoveringSubRegIndexes(&AArch64::QQQRegClass, Lanes, Indexes));
+  EXPECT_EQ(Indexes, (SmallVector<unsigned, 2>{AArch64::qsub0, AArch64::qsub2,
+                                               AArch64::dsub1_then_hsub}));
 }
 
 TEST(AArch64ReservedRegs, ArtificialHIRegistersAreReserved) {

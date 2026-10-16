@@ -541,7 +541,7 @@ TargetRegisterInfo::getRegSizeInBits(Register Reg,
 
 bool TargetRegisterInfo::getCoveringSubRegIndexes(
     const TargetRegisterClass *RC, LaneBitmask LaneMask,
-    SmallVectorImpl<unsigned> &NeededIndexes) const {
+    SmallVectorImpl<unsigned> &NeededIndexes, bool CheckSubRegClobbers) const {
   SmallVector<unsigned, 8> PossibleIndexes;
   unsigned BestIdx = 0;
   unsigned BestCover = 0;
@@ -559,6 +559,11 @@ bool TargetRegisterInfo::getCoveringSubRegIndexes(
 
     // The index must not cover any lanes outside \p LaneMask.
     if ((SubRegMask & ~LaneMask).any())
+      continue;
+
+    // The index must not clobber other parts of \p LaneMask.
+    if (CheckSubRegClobbers &&
+        (getExtraClobberedLanes(*RC, Idx) & LaneMask).any())
       continue;
 
     unsigned PopCount = SubRegMask.getNumLanes();

@@ -282,9 +282,12 @@ public:
   ///
   /// If this is possible, returns true and appends the best matching set of
   /// indexes to \p Indexes. If this is not possible, returns false.
+  /// \p CheckSubRegClobbers Whether to ensure that the the returned
+  ///                        Indexes do not clobber each other.
   bool getCoveringSubRegIndexes(const TargetRegisterClass *RC,
                                 LaneBitmask LaneMask,
-                                SmallVectorImpl<unsigned> &Indexes) const;
+                                SmallVectorImpl<unsigned> &Indexes,
+                                bool CheckSubRegClobbers = true) const;
 
   /// The lane masks returned by getSubRegIndexLaneMask() above can only be
   /// used to determine if sub-registers overlap - they can't be used to
