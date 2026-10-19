@@ -22,8 +22,8 @@ body:             |
     ; CHECK-NEXT: {{  $}}
     ; CHECK-NEXT: [[COPY:%[0-9]+]]:gpr64sp = COPY $x0
     ; CHECK-NEXT: [[LDAXRB:%[0-9]+]]:gpr32 = LDAXRB [[COPY]] :: (volatile load (i8) from %ir.addr)
-    ; CHECK-NEXT: [[SUBREG_TO_REG:%[0-9]+]]:gpr64all = SUBREG_TO_REG [[LDAXRB]], %subreg.sub_32
-    ; CHECK-NEXT: $x1 = COPY [[SUBREG_TO_REG]]
+    ; CHECK-NEXT: [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[LDAXRB]], %subreg.sub_32
+    ; CHECK-NEXT: $x1 = COPY [[REG_SEQUENCE]]
     ; CHECK-NEXT: RET_ReallyLR implicit $x1
     %0:gpr(p0) = COPY $x0
     %1:gpr(i64) = G_INTRINSIC_W_SIDE_EFFECTS intrinsic(@llvm.aarch64.ldaxr), %0(p0) :: (volatile load (i8) from %ir.addr)
@@ -45,8 +45,8 @@ body:             |
     ; CHECK-NEXT: {{  $}}
     ; CHECK-NEXT: [[COPY:%[0-9]+]]:gpr64sp = COPY $x0
     ; CHECK-NEXT: [[LDAXRH:%[0-9]+]]:gpr32 = LDAXRH [[COPY]] :: (volatile load (i16) from %ir.addr)
-    ; CHECK-NEXT: [[SUBREG_TO_REG:%[0-9]+]]:gpr64all = SUBREG_TO_REG [[LDAXRH]], %subreg.sub_32
-    ; CHECK-NEXT: $x1 = COPY [[SUBREG_TO_REG]]
+    ; CHECK-NEXT: [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[LDAXRH]], %subreg.sub_32
+    ; CHECK-NEXT: $x1 = COPY [[REG_SEQUENCE]]
     ; CHECK-NEXT: RET_ReallyLR implicit $x1
     %0:gpr(p0) = COPY $x0
     %1:gpr(i64) = G_INTRINSIC_W_SIDE_EFFECTS intrinsic(@llvm.aarch64.ldaxr), %0(p0) :: (volatile load (i16) from %ir.addr)
@@ -68,8 +68,8 @@ body:             |
     ; CHECK-NEXT: {{  $}}
     ; CHECK-NEXT: [[COPY:%[0-9]+]]:gpr64sp = COPY $x0
     ; CHECK-NEXT: [[LDAXRW:%[0-9]+]]:gpr32 = LDAXRW [[COPY]] :: (volatile load (i32) from %ir.addr)
-    ; CHECK-NEXT: [[SUBREG_TO_REG:%[0-9]+]]:gpr64all = SUBREG_TO_REG [[LDAXRW]], %subreg.sub_32
-    ; CHECK-NEXT: $x1 = COPY [[SUBREG_TO_REG]]
+    ; CHECK-NEXT: [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[LDAXRW]], %subreg.sub_32
+    ; CHECK-NEXT: $x1 = COPY [[REG_SEQUENCE]]
     ; CHECK-NEXT: RET_ReallyLR implicit $x1
     %0:gpr(p0) = COPY $x0
     %1:gpr(i64) = G_INTRINSIC_W_SIDE_EFFECTS intrinsic(@llvm.aarch64.ldaxr), %0(p0) :: (volatile load (i32) from %ir.addr)

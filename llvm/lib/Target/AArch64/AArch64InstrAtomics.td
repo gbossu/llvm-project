@@ -529,19 +529,19 @@ def ldxr_8 : PatFrag<(ops node:$ptr), (int_aarch64_ldxr node:$ptr), [{
 }
 
 def : Pat<(ldxr_1 GPR64sp:$addr),
-          (SUBREG_TO_REG (LDXRB GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDXRB GPR64sp:$addr), sub_32)>;
 def : Pat<(ldxr_2 GPR64sp:$addr),
-          (SUBREG_TO_REG (LDXRH GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDXRH GPR64sp:$addr), sub_32)>;
 def : Pat<(ldxr_4 GPR64sp:$addr),
-          (SUBREG_TO_REG (LDXRW GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDXRW GPR64sp:$addr), sub_32)>;
 def : Pat<(ldxr_8 GPR64sp:$addr), (LDXRX GPR64sp:$addr)>;
 
 def : Pat<(and (ldxr_1 GPR64sp:$addr), 0xff),
-          (SUBREG_TO_REG (LDXRB GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDXRB GPR64sp:$addr), sub_32)>;
 def : Pat<(and (ldxr_2 GPR64sp:$addr), 0xffff),
-          (SUBREG_TO_REG (LDXRH GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDXRH GPR64sp:$addr), sub_32)>;
 def : Pat<(and (ldxr_4 GPR64sp:$addr), 0xffffffff),
-          (SUBREG_TO_REG (LDXRW GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDXRW GPR64sp:$addr), sub_32)>;
 
 // Load-exclusives.
 
@@ -570,19 +570,19 @@ def ldaxr_8 : PatFrag<(ops node:$ptr), (int_aarch64_ldaxr node:$ptr), [{
 }
 
 def : Pat<(ldaxr_1 GPR64sp:$addr),
-          (SUBREG_TO_REG (LDAXRB GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDAXRB GPR64sp:$addr), sub_32)>;
 def : Pat<(ldaxr_2 GPR64sp:$addr),
-          (SUBREG_TO_REG (LDAXRH GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDAXRH GPR64sp:$addr), sub_32)>;
 def : Pat<(ldaxr_4 GPR64sp:$addr),
-          (SUBREG_TO_REG (LDAXRW GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDAXRW GPR64sp:$addr), sub_32)>;
 def : Pat<(ldaxr_8 GPR64sp:$addr), (LDAXRX GPR64sp:$addr)>;
 
 def : Pat<(and (ldaxr_1 GPR64sp:$addr), 0xff),
-          (SUBREG_TO_REG (LDAXRB GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDAXRB GPR64sp:$addr), sub_32)>;
 def : Pat<(and (ldaxr_2 GPR64sp:$addr), 0xffff),
-          (SUBREG_TO_REG (LDAXRH GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDAXRH GPR64sp:$addr), sub_32)>;
 def : Pat<(and (ldaxr_4 GPR64sp:$addr), 0xffffffff),
-          (SUBREG_TO_REG (LDAXRW GPR64sp:$addr), sub_32)>;
+          (REG_SEQUENCE GPR64, (LDAXRW GPR64sp:$addr), sub_32)>;
 
 // Store-exclusives.
 
