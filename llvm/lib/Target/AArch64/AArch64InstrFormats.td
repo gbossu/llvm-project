@@ -2826,23 +2826,23 @@ multiclass Shift<bits<2> shift_type, string asm, SDNode OpNode> {
 
   def : Pat<(i64 (OpNode GPR64:$Rn, (i64 (sext GPR32:$Rm)))),
             (!cast<Instruction>(NAME # "Xr") GPR64:$Rn,
-                (SUBREG_TO_REG GPR32:$Rm, sub_32))>;
+                (REG_SEQUENCE GPR64, GPR32:$Rm, sub_32))>;
 
   def : Pat<(i64 (OpNode GPR64:$Rn, (i64 (zext GPR32:$Rm)))),
             (!cast<Instruction>(NAME # "Xr") GPR64:$Rn,
-                (SUBREG_TO_REG GPR32:$Rm, sub_32))>;
+                (REG_SEQUENCE GPR64, GPR32:$Rm, sub_32))>;
 
   // Peek through the widening when the i64 shift amount is an extended i32
   // value that still carries a maskable AND or a (C - x) subtract.
   def : Pat<(i64 (OpNode GPR64:$Rn, (i64 (zext (i32 shiftMask64In32:$Rm))))),
             (!cast<Instruction>(NAME # "Xr") GPR64:$Rn,
-                (SUBREG_TO_REG shiftMask64In32:$Rm, sub_32))>;
+                (REG_SEQUENCE GPR64, shiftMask64In32:$Rm, sub_32))>;
   def : Pat<(i64 (OpNode GPR64:$Rn, (i64 (anyext (i32 shiftMask64In32:$Rm))))),
             (!cast<Instruction>(NAME # "Xr") GPR64:$Rn,
-                (SUBREG_TO_REG shiftMask64In32:$Rm, sub_32))>;
+                (REG_SEQUENCE GPR64, shiftMask64In32:$Rm, sub_32))>;
   def : Pat<(i64 (OpNode GPR64:$Rn, (i64 (sext (i32 shiftMask64In32:$Rm))))),
             (!cast<Instruction>(NAME # "Xr") GPR64:$Rn,
-                (SUBREG_TO_REG shiftMask64In32:$Rm, sub_32))>;
+                (REG_SEQUENCE GPR64, shiftMask64In32:$Rm, sub_32))>;
 
   def : Pat<(i32 (OpNode GPR32:$Rn, shiftMask32:$Rm)),
             (!cast<Instruction>(NAME # "Wr") GPR32:$Rn, shiftMask32:$Rm)>;

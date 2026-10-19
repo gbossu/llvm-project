@@ -8386,10 +8386,10 @@ def : Pat<(and (vector_extract (v8i16 V128:$Rn), VectorIndexH:$idx),
 
 def : Pat<(i64 (and (i64 (anyext (i32 (vector_extract (v16i8 V128:$Rn),
             VectorIndexB:$idx)))), (i64 0xff))),
-          (SUBREG_TO_REG (i32 (UMOVvi8 V128:$Rn, VectorIndexB:$idx)), sub_32)>;
+          (REG_SEQUENCE GPR64, (i32 (UMOVvi8 V128:$Rn, VectorIndexB:$idx)), sub_32)>;
 def : Pat<(i64 (and (i64 (anyext (i32 (vector_extract (v8i16 V128:$Rn),
             VectorIndexH:$idx)))), (i64 0xffff))),
-          (SUBREG_TO_REG (i32 (UMOVvi16 V128:$Rn, VectorIndexH:$idx)), sub_32)>;
+          (REG_SEQUENCE GPR64, (i32 (UMOVvi16 V128:$Rn, VectorIndexH:$idx)), sub_32)>;
 
 defm INS : SIMDIns;
 
