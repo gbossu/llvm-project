@@ -137,11 +137,9 @@ define float @s256_to_f32(i256 %val) nounwind {
 ; CHECK-NEXT:    sub x10, x10, x11
 ; CHECK-NEXT:    ldr x10, [x10]
 ; CHECK-NEXT:    lsl x10, x10, x9
-; CHECK-NEXT:    // kill: def $w10 killed $w10 killed $x10 def $x10
 ; CHECK-NEXT:    b .LBB0_7
 ; CHECK-NEXT:  .LBB0_11: // %itofp-if-then20
 ; CHECK-NEXT:    lsr x10, x10, #3
-; CHECK-NEXT:    // kill: def $w10 killed $w10 killed $x10 def $x10
 ; CHECK-NEXT:    b .LBB0_8
 ; CHECK-NEXT:  .LBB0_12: // %itofp-sw-bb
 ; CHECK-NEXT:    lsl x10, x10, #1
@@ -265,11 +263,9 @@ define float @u256_to_f32(i256 %val) nounwind {
 ; CHECK-NEXT:    sub x10, x11, x10
 ; CHECK-NEXT:    ldr x10, [x10]
 ; CHECK-NEXT:    lsl x10, x10, x9
-; CHECK-NEXT:    // kill: def $w10 killed $w10 killed $x10 def $x10
 ; CHECK-NEXT:    b .LBB1_7
 ; CHECK-NEXT:  .LBB1_11: // %itofp-if-then20
 ; CHECK-NEXT:    lsr x10, x10, #3
-; CHECK-NEXT:    // kill: def $w10 killed $w10 killed $x10 def $x10
 ; CHECK-NEXT:    b .LBB1_8
 ; CHECK-NEXT:  .LBB1_12: // %itofp-sw-bb
 ; CHECK-NEXT:    lsl x0, x0, #1
@@ -542,12 +538,10 @@ define double @u256_to_f64(i256 %val) nounwind {
 ; CHECK-NEXT:    ldr x10, [x10]
 ; CHECK-NEXT:    lsl x10, x10, x9
 ; CHECK-NEXT:    lsr x11, x10, #32
-; CHECK-NEXT:    // kill: def $w11 killed $w11 killed $x11 def $x11
 ; CHECK-NEXT:    b .LBB3_7
 ; CHECK-NEXT:  .LBB3_10: // %itofp-if-then20
-; CHECK-NEXT:    extr x8, x12, x11, #35
 ; CHECK-NEXT:    extr x10, x12, x11, #3
-; CHECK-NEXT:    mov w11, w8
+; CHECK-NEXT:    extr x11, x12, x11, #35
 ; CHECK-NEXT:    mov w8, w9
 ; CHECK-NEXT:    b .LBB3_7
 ; CHECK-NEXT:  .LBB3_11: // %itofp-sw-bb
@@ -1367,7 +1361,6 @@ define i256 @f32_to_s256_sat(float %val) nounwind {
 ; CHECK-SD-NEXT:  .LBB8_7: // %fp-to-i-cleanup
 ; CHECK-SD-NEXT:    ret
 ; CHECK-SD-NEXT:  .LBB8_8: // %fp-to-i-if-saturate
-; CHECK-SD-NEXT:    // kill: def $w8 killed $w8 killed $x8 def $x8
 ; CHECK-SD-NEXT:    sbfx x8, x8, #31, #1
 ; CHECK-SD-NEXT:    mvn x0, x8
 ; CHECK-SD-NEXT:    eor x3, x8, #0x7fffffffffffffff
