@@ -510,14 +510,28 @@ bool AArch64MIPeepholeOptImpl::checkMovImmInstr(MachineInstr &MI,
   if (!MovMI)
     return false;
 
-  // If it is SUBREG_TO_REG, check its operand.
+  // If it is SUBREG_TO_REG, REG_SEQUENCE or INSERT_SUBREG, check its operand.
   SubregToRegMI = nullptr;
   if (MovMI->getOpcode() == TargetOpcode::SUBREG_TO_REG) {
     SubregToRegMI = MovMI;
     MovMI = MRI->getUniqueVRegDef(MovMI->getOperand(1).getReg());
-    if (!MovMI)
+  } else if (MovMI->getOpcode() == TargetOpcode::INSERT_SUBREG) {
+    if (!MovMI->getOperand(1).isUndef()) {
+      Register PassThroughReg = MovMI->getOperand(1).getReg();
+      MachineInstr *PassThroughDef = MRI->getUniqueVRegDef(PassThroughReg);
+      if (!PassThroughDef || !PassThroughDef->isImplicitDef())
+        return false;
+    }
+    SubregToRegMI = MovMI;
+    MovMI = MRI->getUniqueVRegDef(MovMI->getOperand(2).getReg());
+  } else if (MovMI->getOpcode() == TargetOpcode::REG_SEQUENCE) {
+    if (MovMI->getNumOperands() > 3)
       return false;
+    SubregToRegMI = MovMI;
+    MovMI = MRI->getUniqueVRegDef(MovMI->getOperand(1).getReg());
   }
+  if (!MovMI)
+    return false;
 
   if (MovMI->getOpcode() != AArch64::MOVi32imm &&
       MovMI->getOpcode() != AArch64::MOVi64imm)
