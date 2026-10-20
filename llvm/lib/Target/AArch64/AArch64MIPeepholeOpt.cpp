@@ -137,7 +137,6 @@ private:
                           SplitStrategy Strategy, unsigned OtherOpc = 0);
   bool visitORR(MachineInstr &MI);
   bool visitCSEL(MachineInstr &MI);
-  bool visitINSERT(MachineInstr &MI);
   bool visitINSviGPR(MachineInstr &MI, unsigned Opc);
   bool visitINSvi64lane(MachineInstr &MI);
   bool visitFMOVDr(MachineInstr &MI);
@@ -374,50 +373,6 @@ bool AArch64MIPeepholeOptImpl::visitCSEL(MachineInstr &MI) {
       .addImm(0);
 
   MI.eraseFromParent();
-  return true;
-}
-
-bool AArch64MIPeepholeOptImpl::visitINSERT(MachineInstr &MI) {
-  // Check this INSERT_SUBREG comes from below zero-extend pattern.
-  //
-  // From %reg = INSERT_SUBREG %reg(tied-def 0), %subreg, subidx
-  // To   %reg:subidx = SUBREG_TO_REG %subreg, subidx
-  //
-  // We're assuming the first operand to INSERT_SUBREG is irrelevant because a
-  // COPY would destroy the upper part of the register anyway
-  if (!MI.isRegTiedToDefOperand(1))
-    return false;
-
-  Register DstReg = MI.getOperand(0).getReg();
-  const TargetRegisterClass *RC = MRI->getRegClass(DstReg);
-  MachineInstr *SrcMI = MRI->getUniqueVRegDef(MI.getOperand(2).getReg());
-  if (!SrcMI)
-    return false;
-
-  // From https://developer.arm.com/documentation/dui0801/b/BABBGCAC
-  //
-  // When you use the 32-bit form of an instruction, the upper 32 bits of the
-  // source registers are ignored and the upper 32 bits of the destination
-  // register are set to zero.
-  //
-  // If AArch64's 32-bit form of instruction defines the source operand of
-  // zero-extend, we do not need the zero-extend. Let's check the MI's opcode is
-  // real AArch64 instruction and if it is not, do not process the opcode
-  // conservatively.
-  if ((SrcMI->getOpcode() <= TargetOpcode::GENERIC_OP_END) ||
-      !AArch64::GPR64allRegClass.hasSubClassEq(RC))
-    return false;
-
-  // Build a SUBREG_TO_REG instruction
-  MachineInstr *SubregMI =
-      BuildMI(*MI.getParent(), MI, MI.getDebugLoc(),
-              TII->get(TargetOpcode::SUBREG_TO_REG), DstReg)
-          .add(MI.getOperand(2))
-          .add(MI.getOperand(3));
-  LLVM_DEBUG(dbgs() << MI << "  replace by:\n: " << *SubregMI << "\n");
-  (void)SubregMI;
-  MI.eraseFromParent();
-
   return true;
 }
 
@@ -992,9 +947,6 @@ bool AArch64MIPeepholeOptImpl::run(MachineFunction &MF) {
     for (MachineInstr &MI : make_early_inc_range(MBB)) {
       switch (MI.getOpcode()) {
       default:
-        break;
-      case AArch64::INSERT_SUBREG:
-        Changed |= visitINSERT(MI);
         break;
       case AArch64::ANDWrr:
         Changed |= trySplitLogicalImm<uint32_t>(AArch64::ANDWri, MI,
