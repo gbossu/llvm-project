@@ -46,11 +46,11 @@ define i32 @val_compare_and_swap_from_load(ptr %p, i32 %cmp, ptr %pnew) {
   ; CHECK-NEXT:   successors: %bb.1(0x80000000)
   ; CHECK-NEXT:   liveins: $w1, $x0, $x2
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   renamable $w9 = LDRWui killed renamable $x2, 0, implicit-def $x9, pcsections !0 :: (load (i32) from %ir.pnew)
+  ; CHECK-NEXT:   renamable $w9 = LDRWui killed renamable $x2, 0, pcsections !0 :: (load (i32) from %ir.pnew)
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.1.cmpxchg.start:
   ; CHECK-NEXT:   successors: %bb.2(0x7ffff800), %bb.3(0x00000800)
-  ; CHECK-NEXT:   liveins: $w1, $x0, $x9
+  ; CHECK-NEXT:   liveins: $w1, $w9, $x0
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   renamable $w8 = LDAXRW renamable $x0, pcsections !0 :: (volatile load (i32) from %ir.p)
   ; CHECK-NEXT:   $wzr = SUBSWrs renamable $w8, renamable $w1, 0, implicit-def $nzcv, pcsections !0
@@ -58,7 +58,7 @@ define i32 @val_compare_and_swap_from_load(ptr %p, i32 %cmp, ptr %pnew) {
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.2.cmpxchg.trystore:
   ; CHECK-NEXT:   successors: %bb.4(0x7ffff800), %bb.1(0x00000800)
-  ; CHECK-NEXT:   liveins: $w1, $w8, $x0, $x9
+  ; CHECK-NEXT:   liveins: $w1, $w8, $w9, $x0
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   early-clobber renamable $w10 = STXRW renamable $w9, renamable $x0, pcsections !0 :: (volatile store (i32) into %ir.p)
   ; CHECK-NEXT:   CBNZW killed renamable $w10, %bb.1

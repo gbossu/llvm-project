@@ -1006,21 +1006,21 @@ define float @foo_vararg(ptr swifterror %error_ptr_ref, ...) {
 ; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w8 killed $w8 killed $x8
 ; CHECK-O0-ARM64_32-NEXT:    str w8, [sp, #24]
 ; CHECK-O0-ARM64_32-NEXT:    ldr w8, [sp, #24]
-; CHECK-O0-ARM64_32-NEXT:    ; kill: def $x8 killed $w8
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w8 killed $w8 def $x8
 ; CHECK-O0-ARM64_32-NEXT:    mov w9, w8
 ; CHECK-O0-ARM64_32-NEXT:    add w9, w9, #4
 ; CHECK-O0-ARM64_32-NEXT:    str w9, [sp, #24]
 ; CHECK-O0-ARM64_32-NEXT:    ldr w8, [x8]
 ; CHECK-O0-ARM64_32-NEXT:    str w8, [sp, #20]
 ; CHECK-O0-ARM64_32-NEXT:    ldr w8, [sp, #24]
-; CHECK-O0-ARM64_32-NEXT:    ; kill: def $x8 killed $w8
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w8 killed $w8 def $x8
 ; CHECK-O0-ARM64_32-NEXT:    mov w9, w8
 ; CHECK-O0-ARM64_32-NEXT:    add w9, w9, #4
 ; CHECK-O0-ARM64_32-NEXT:    str w9, [sp, #24]
 ; CHECK-O0-ARM64_32-NEXT:    ldr w8, [x8]
 ; CHECK-O0-ARM64_32-NEXT:    str w8, [sp, #16]
 ; CHECK-O0-ARM64_32-NEXT:    ldr w8, [sp, #24]
-; CHECK-O0-ARM64_32-NEXT:    ; kill: def $x8 killed $w8
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w8 killed $w8 def $x8
 ; CHECK-O0-ARM64_32-NEXT:    mov w9, w8
 ; CHECK-O0-ARM64_32-NEXT:    add w9, w9, #4
 ; CHECK-O0-ARM64_32-NEXT:    str w9, [sp, #24]
@@ -1119,11 +1119,11 @@ define float @caller4(ptr %error_ref) {
 ; CHECK-O0-AARCH64-NEXT:    mov w8, #12 ; =0xc
 ; CHECK-O0-AARCH64-NEXT:    stur w8, [x29, #-36]
 ; CHECK-O0-AARCH64-NEXT:    ldur w8, [x29, #-28]
-; CHECK-O0-AARCH64-NEXT:    ; kill: def $x8 killed $w8
-; CHECK-O0-AARCH64-NEXT:    ldur w9, [x29, #-32]
-; CHECK-O0-AARCH64-NEXT:    mov w10, w9
-; CHECK-O0-AARCH64-NEXT:    ldur w9, [x29, #-36]
-; CHECK-O0-AARCH64-NEXT:    mov w11, w9
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w8 killed $w8 def $x8
+; CHECK-O0-AARCH64-NEXT:    ldur w10, [x29, #-32]
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w10 killed $w10 def $x10
+; CHECK-O0-AARCH64-NEXT:    ldur w11, [x29, #-36]
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w11 killed $w11 def $x11
 ; CHECK-O0-AARCH64-NEXT:    mov x9, sp
 ; CHECK-O0-AARCH64-NEXT:    str x11, [x9, #16]
 ; CHECK-O0-AARCH64-NEXT:    str x10, [x9, #8]

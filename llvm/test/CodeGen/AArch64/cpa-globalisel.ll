@@ -659,7 +659,7 @@ define hidden void @multidim() {
 ; CHECK-CPA-O0-NEXT:    add x10, x10, :lo12:.L.str
 ; CHECK-CPA-O0-NEXT:    str x10, [sp, #8] // 8-byte Spill
 ; CHECK-CPA-O0-NEXT:    ldrh w10, [x9, :lo12:b]
-; CHECK-CPA-O0-NEXT:    // kill: def $x10 killed $w10
+; CHECK-CPA-O0-NEXT:    // kill: def $w10 killed $w10 def $x10
 ; CHECK-CPA-O0-NEXT:    addpt x8, x8, x10, lsl #1
 ; CHECK-CPA-O0-NEXT:    ldrh w9, [x9, :lo12:b]
 ; CHECK-CPA-O0-NEXT:    add w9, w9, #1
@@ -712,7 +712,7 @@ define hidden void @multidim() {
 ; CHECK-NOCPA-O0-NEXT:    add x10, x10, :lo12:.L.str
 ; CHECK-NOCPA-O0-NEXT:    str x10, [sp, #8] // 8-byte Spill
 ; CHECK-NOCPA-O0-NEXT:    ldrh w10, [x9, :lo12:b]
-; CHECK-NOCPA-O0-NEXT:    // kill: def $x10 killed $w10
+; CHECK-NOCPA-O0-NEXT:    // kill: def $w10 killed $w10 def $x10
 ; CHECK-NOCPA-O0-NEXT:    add x8, x8, x10, lsl #1
 ; CHECK-NOCPA-O0-NEXT:    ldrh w9, [x9, :lo12:b]
 ; CHECK-NOCPA-O0-NEXT:    add w9, w9, #1

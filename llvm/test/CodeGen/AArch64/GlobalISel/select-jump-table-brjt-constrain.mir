@@ -26,15 +26,15 @@ body:             |
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   [[DEF:%[0-9]+]]:gpr64common = IMPLICIT_DEF
   ; CHECK-NEXT:   [[LDRBBui:%[0-9]+]]:gpr32 = LDRBBui [[DEF]], 0 :: (load (i8))
-  ; CHECK-NEXT:   [[SUBREG_TO_REG:%[0-9]+]]:gpr64common = SUBREG_TO_REG [[LDRBBui]], %subreg.sub_32
-  ; CHECK-NEXT:   [[SUBSXri:%[0-9]+]]:gpr64 = SUBSXri [[SUBREG_TO_REG]], 8, 0, implicit-def $nzcv
+  ; CHECK-NEXT:   [[REG_SEQUENCE:%[0-9]+]]:gpr64common = REG_SEQUENCE [[LDRBBui]], %subreg.sub_32
+  ; CHECK-NEXT:   [[SUBSXri:%[0-9]+]]:gpr64 = SUBSXri [[REG_SEQUENCE]], 8, 0, implicit-def $nzcv
   ; CHECK-NEXT:   Bcc 8, %bb.3, implicit $nzcv
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.1:
   ; CHECK-NEXT:   successors: %bb.2(0x40000000), %bb.3(0x40000000)
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   [[MOVaddrJT:%[0-9]+]]:gpr64common = MOVaddrJT target-flags(aarch64-page) %jump-table.0, target-flags(aarch64-pageoff, aarch64-nc) %jump-table.0
-  ; CHECK-NEXT:   early-clobber %5:gpr64, early-clobber %6:gpr64sp = JumpTableDest32 [[MOVaddrJT]], [[SUBREG_TO_REG]], %jump-table.0
+  ; CHECK-NEXT:   early-clobber %5:gpr64, early-clobber %6:gpr64sp = JumpTableDest32 [[MOVaddrJT]], [[REG_SEQUENCE]], %jump-table.0
   ; CHECK-NEXT:   JUMP_TABLE_DEBUG_INFO 0
   ; CHECK-NEXT:   BR %5
   ; CHECK-NEXT: {{  $}}

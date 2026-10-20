@@ -257,11 +257,11 @@ define void @wide_interleave3(ptr %dst, ptr %src0, ptr %src1, ptr %src2) {
 ; CHECK-NEXT:    .cfi_offset w19, -8
 ; CHECK-NEXT:    .cfi_offset w20, -16
 ; CHECK-NEXT:    .cfi_offset w21, -32
-; CHECK-NEXT:    ldp w10, w16, [x1, #24]
+; CHECK-NEXT:    ldp w9, w16, [x1, #24]
 ; CHECK-NEXT:    ldp w13, w12, [x2, #24]
-; CHECK-NEXT:    ldp w9, w8, [x2]
+; CHECK-NEXT:    ldp w10, w8, [x2]
 ; CHECK-NEXT:    ldp w17, w18, [x3]
-; CHECK-NEXT:    orr x10, x10, x13, lsl #32
+; CHECK-NEXT:    orr x9, x9, x13, lsl #32
 ; CHECK-NEXT:    ldp w11, w13, [x3, #24]
 ; CHECK-NEXT:    ldp w6, w7, [x3, #8]
 ; CHECK-NEXT:    ldp w20, w3, [x3, #16]
@@ -275,18 +275,18 @@ define void @wide_interleave3(ptr %dst, ptr %src0, ptr %src1, ptr %src2) {
 ; CHECK-NEXT:    ldp w21, w1, [x1, #16]
 ; CHECK-NEXT:    stp x11, x12, [x0, #80]
 ; CHECK-NEXT:    orr x12, x19, x3, lsl #32
-; CHECK-NEXT:    orr x9, x14, x9, lsl #32
 ; CHECK-NEXT:    orr x11, x20, x1, lsl #32
-; CHECK-NEXT:    stp x12, x10, [x0, #64]
-; CHECK-NEXT:    orr x10, x21, x2, lsl #32
+; CHECK-NEXT:    stp x12, x9, [x0, #64]
+; CHECK-NEXT:    orr x9, x21, x2, lsl #32
 ; CHECK-NEXT:    orr x12, x16, x7, lsl #32
 ; CHECK-NEXT:    ldp x20, x19, [sp, #16] // 16-byte Folded Reload
-; CHECK-NEXT:    stp x10, x11, [x0, #48]
+; CHECK-NEXT:    stp x9, x11, [x0, #48]
 ; CHECK-NEXT:    orr x11, x6, x5, lsl #32
-; CHECK-NEXT:    orr x10, x13, x4, lsl #32
+; CHECK-NEXT:    orr x9, x13, x4, lsl #32
 ; CHECK-NEXT:    stp x11, x12, [x0, #32]
 ; CHECK-NEXT:    orr x11, x17, x15, lsl #32
-; CHECK-NEXT:    stp x8, x10, [x0, #16]
+; CHECK-NEXT:    stp x8, x9, [x0, #16]
+; CHECK-NEXT:    orr x9, x14, x10, lsl #32
 ; CHECK-NEXT:    stp x9, x11, [x0]
 ; CHECK-NEXT:    ldr x21, [sp], #32 // 8-byte Folded Reload
 ; CHECK-NEXT:    ret

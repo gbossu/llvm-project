@@ -4036,12 +4036,10 @@ defm : VecROLoadPat<ro128, v16i8,  LDRQroW, LDRQroX, 16, [IsLE]>;
 multiclass ExtLoadTo64ROPat<ROAddrMode ro, SDPatternOperator loadop,
                             Instruction INSTW, Instruction INSTX> {
   def : Pat<(i64 (loadop (ro.Wpat GPR64sp:$Rn, GPR32:$Rm, ro.Wext:$extend))),
-            (SUBREG_TO_REG (INSTW GPR64sp:$Rn, GPR32:$Rm, ro.Wext:$extend),
-                           sub_32)>;
+            (REG_SEQUENCE GPR64, (INSTW GPR64sp:$Rn, GPR32:$Rm, ro.Wext:$extend), sub_32)>;
 
   def : Pat<(i64 (loadop (ro.Xpat GPR64sp:$Rn, GPR64:$Rm, ro.Xext:$extend))),
-            (SUBREG_TO_REG (INSTX GPR64sp:$Rn, GPR64:$Rm, ro.Xext:$extend),
-                           sub_32)>;
+            (REG_SEQUENCE GPR64, (INSTX GPR64sp:$Rn, GPR64:$Rm, ro.Xext:$extend), sub_32)>;
 }
 
 let AddedComplexity = 10 in {
@@ -4203,15 +4201,15 @@ defm LDRBB : LoadUI<0b00, 0, 0b01, GPR32, uimm12s1, "ldrb",
                                                    uimm12s1:$offset)))]>;
 // zextload -> i64
 def : Pat<(i64 (zextloadi8 (am_indexed8 GPR64sp:$Rn, uimm12s1:$offset))),
-    (SUBREG_TO_REG (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
 def : Pat<(i64 (zextloadi16 (am_indexed16 GPR64sp:$Rn, uimm12s2:$offset))),
-    (SUBREG_TO_REG (LDRHHui GPR64sp:$Rn, uimm12s2:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDRHHui GPR64sp:$Rn, uimm12s2:$offset), sub_32)>;
 
 // zextloadi1 -> zextloadi8
 def : Pat<(i32 (zextloadi1 (am_indexed8 GPR64sp:$Rn, uimm12s1:$offset))),
           (LDRBBui GPR64sp:$Rn, uimm12s1:$offset)>;
 def : Pat<(i64 (zextloadi1 (am_indexed8 GPR64sp:$Rn, uimm12s1:$offset))),
-    (SUBREG_TO_REG (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
 
 // extload -> zextload
 def : Pat<(i32 (extloadi16 (am_indexed16 GPR64sp:$Rn, uimm12s2:$offset))),
@@ -4221,13 +4219,13 @@ def : Pat<(i32 (extloadi8 (am_indexed8 GPR64sp:$Rn, uimm12s1:$offset))),
 def : Pat<(i32 (extloadi1 (am_indexed8 GPR64sp:$Rn, uimm12s1:$offset))),
           (LDRBBui GPR64sp:$Rn, uimm12s1:$offset)>;
 def : Pat<(i64 (extloadi32 (am_indexed32 GPR64sp:$Rn, uimm12s4:$offset))),
-    (SUBREG_TO_REG (LDRWui GPR64sp:$Rn, uimm12s4:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDRWui GPR64sp:$Rn, uimm12s4:$offset), sub_32)>;
 def : Pat<(i64 (extloadi16 (am_indexed16 GPR64sp:$Rn, uimm12s2:$offset))),
-    (SUBREG_TO_REG (LDRHHui GPR64sp:$Rn, uimm12s2:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDRHHui GPR64sp:$Rn, uimm12s2:$offset), sub_32)>;
 def : Pat<(i64 (extloadi8 (am_indexed8 GPR64sp:$Rn, uimm12s1:$offset))),
-    (SUBREG_TO_REG (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
 def : Pat<(i64 (extloadi1 (am_indexed8 GPR64sp:$Rn, uimm12s1:$offset))),
-    (SUBREG_TO_REG (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDRBBui GPR64sp:$Rn, uimm12s1:$offset), sub_32)>;
 
 // load sign-extended half-word
 defm LDRSHW : LoadUI<0b01, 0, 0b11, GPR32, uimm12s2, "ldrsh",
@@ -4257,7 +4255,7 @@ defm LDRSW  : LoadUI<0b10, 0, 0b10, GPR64, uimm12s4, "ldrsw",
 
 // load zero-extended word
 def : Pat<(i64 (zextloadi32 (am_indexed32 GPR64sp:$Rn, uimm12s4:$offset))),
-      (SUBREG_TO_REG (LDRWui GPR64sp:$Rn, uimm12s4:$offset), sub_32)>;
+      (REG_SEQUENCE GPR64, (LDRWui GPR64sp:$Rn, uimm12s4:$offset), sub_32)>;
 
 // Pre-fetch.
 def PRFMui : PrefetchUI<0b11, 0, 0b10, "prfm",
@@ -4300,7 +4298,7 @@ def LDRSWl : LoadLiteral<0b10, 0, GPR64z, "ldrsw",
 
 let AddedComplexity = 20 in {
 def : Pat<(i64 (zextloadi32 (AArch64adr alignedglobal:$label))),
-        (SUBREG_TO_REG (LDRWl $label), sub_32)>;
+        (REG_SEQUENCE GPR64, (LDRWl $label), sub_32)>;
 }
 
 // prefetch
@@ -4430,13 +4428,13 @@ def : Pat<(i32 (extloadi8 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
 def : Pat<(i32 (extloadi1 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
           (LDURBBi GPR64sp:$Rn, simm9:$offset)>;
 def : Pat<(i64 (extloadi32 (am_unscaled32 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURWi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURWi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 def : Pat<(i64 (extloadi16 (am_unscaled16 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURHHi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURHHi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 def : Pat<(i64 (extloadi8 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 def : Pat<(i64 (extloadi1 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 // unscaled zext
 def : Pat<(i32 (zextloadi16 (am_unscaled16 GPR64sp:$Rn, simm9:$offset))),
           (LDURHHi GPR64sp:$Rn, simm9:$offset)>;
@@ -4445,13 +4443,13 @@ def : Pat<(i32 (zextloadi8 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
 def : Pat<(i32 (zextloadi1 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
           (LDURBBi GPR64sp:$Rn, simm9:$offset)>;
 def : Pat<(i64 (zextloadi32 (am_unscaled32 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURWi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURWi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 def : Pat<(i64 (zextloadi16 (am_unscaled16 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURHHi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURHHi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 def : Pat<(i64 (zextloadi8 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 def : Pat<(i64 (zextloadi1 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
-    (SUBREG_TO_REG (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+    (REG_SEQUENCE GPR64, (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 
 
 //---
@@ -4508,9 +4506,9 @@ def : InstAlias<"ldr $Rt, [$Rn, $offset]",
 
 // zextload -> i64
 def : Pat<(i64 (zextloadi8 (am_unscaled8 GPR64sp:$Rn, simm9:$offset))),
-  (SUBREG_TO_REG (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+  (REG_SEQUENCE GPR64, (LDURBBi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 def : Pat<(i64 (zextloadi16 (am_unscaled16 GPR64sp:$Rn, simm9:$offset))),
-  (SUBREG_TO_REG (LDURHHi GPR64sp:$Rn, simm9:$offset), sub_32)>;
+  (REG_SEQUENCE GPR64, (LDURHHi GPR64sp:$Rn, simm9:$offset), sub_32)>;
 
 // load sign-extended half-word
 defm LDURSHW
