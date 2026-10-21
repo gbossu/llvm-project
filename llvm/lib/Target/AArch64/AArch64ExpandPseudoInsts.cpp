@@ -862,6 +862,37 @@ bool AArch64ExpandPseudoImpl::expandSetTagLoop(
   return true;
 }
 
+/// Wrapper around LivePhysRegs to easily check which regs are live around an
+/// instruction.
+class SpillLivenessHelper {
+  LivePhysRegs LRs;
+  MachineFunction &MF;
+
+  /// Collect all registers that are live before MI.
+  void computeLiveIns(MachineInstr &MI) {
+    LRs.addLiveIns(*MI.getParent());
+    auto LivenessEnd = MachineBasicBlock::iterator(MI);
+    SmallVector<std::pair<MCPhysReg, const MachineOperand *>, 2> Clobbers;
+    for (MachineInstr &LiveMI :
+         make_range(MI.getParent()->begin(), LivenessEnd))
+      LRs.stepForward(LiveMI, Clobbers);
+  }
+
+public:
+  SpillLivenessHelper(MachineInstr &MI)
+      : LRs(*MI.getMF()->getSubtarget().getRegisterInfo()), MF(*MI.getMF()) {
+    if (MI.mayStore() && MI.getMF()->getRegInfo().tracksLiveness())
+      computeLiveIns(MI);
+    // TODO: We could compute liveouts for loads as well.
+  }
+
+  bool isLive(Register Reg) {
+    // If Reg is unavailable, it means it's live.
+    return !MF.getRegInfo().tracksLiveness() ||
+           !LRs.available(MF.getRegInfo(), Reg);
+  }
+};
+
 bool AArch64ExpandPseudoImpl::expandSVESpillFill(
     MachineBasicBlock &MBB, MachineBasicBlock::iterator MBBI, unsigned Opc,
     unsigned N) {
@@ -876,17 +907,30 @@ bool AArch64ExpandPseudoImpl::expandSVESpillFill(
   const TargetRegisterInfo *TRI =
       MBB.getParent()->getSubtarget().getRegisterInfo();
   MachineInstr &MI = *MBBI;
+
+  // A tuple store is valid as long as one member is defined, but
+  // expanding it must not create separate uses of undefined registers.
+  // Track the liveness of the tuple members.
+  SpillLivenessHelper SLH(MI);
+
+  MachineInstr *LastInsertedMI = nullptr;
   for (unsigned Offset = 0; Offset < N; ++Offset) {
     int ImmOffset = MI.getOperand(2).getImm() + Offset;
-    bool Kill = (Offset + 1 == N) ? MI.getOperand(1).isKill() : false;
     assert(ImmOffset >= -256 && ImmOffset < 256 &&
            "Immediate spill offset out of range");
-    BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(Opc))
-        .addReg(TRI->getSubReg(MI.getOperand(0).getReg(), sub0 + Offset),
-                RState)
-        .addReg(MI.getOperand(1).getReg(), getKillRegState(Kill))
-        .addImm(ImmOffset);
+    MCRegister MemberReg =
+        TRI->getSubReg(MI.getOperand(0).getReg(), sub0 + Offset);
+    if (!MI.mayStore() || SLH.isLive(MemberReg))
+      LastInsertedMI = BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(Opc))
+                           .addReg(MemberReg, RState)
+                           .addReg(MI.getOperand(1).getReg())
+                           .addImm(ImmOffset)
+                           .getInstr();
   }
+
+  if (LastInsertedMI && MI.getOperand(1).isKill())
+    LastInsertedMI->getOperand(1).setIsKill();
+
   MI.eraseFromParent();
   return true;
 }
