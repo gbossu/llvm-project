@@ -2071,6 +2071,10 @@ void TwoAddressInstructionImpl::eliminateRegSequence(
     LLVM_DEBUG(dbgs() << "Inserted: " << *CopyMI);
   }
 
+  // REG_SEQUENCE operands might not cover the complete destination register.
+  // Treat lanes without an operand as undef, forcing interval re-computation.
+  UndefLanes |= MRI->getMaxLaneMaskForVReg(DstReg) & ~DefinedLanes;
+
   MachineBasicBlock::iterator EndMBBI =
       std::next(MachineBasicBlock::iterator(MI));
 
@@ -2090,7 +2094,7 @@ void TwoAddressInstructionImpl::eliminateRegSequence(
       // subregister for accurate interval computation.
       if (UndefLanes.any() && DefVN && MRI->shouldTrackSubRegLiveness(DstReg)) {
         auto &LI = LIS->getInterval(DstReg);
-        for (MachineOperand &UseOp : MRI->use_operands(DstReg)) {
+        for (MachineOperand &UseOp : MRI->use_nodbg_operands(DstReg)) {
           unsigned SubReg = UseOp.getSubReg();
           if (UseOp.isUndef() || !SubReg)
             continue;
