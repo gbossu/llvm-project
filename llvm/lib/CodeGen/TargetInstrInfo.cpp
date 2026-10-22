@@ -716,6 +716,18 @@ static MachineInstr *foldInlineAsmMemOperand(MachineInstr &MI,
   return &NewMI;
 }
 
+/// Ensure that dead defs from \p OldMI are preserved in \p NewMI.
+static void preserveDeadDefs(const MachineInstr &OldMI, MachineInstr &NewMI) {
+  for (const MachineOperand &OldDef : OldMI.all_defs()) {
+    if (!OldDef.isDead())
+      continue;
+    for (MachineOperand &NewDef : NewMI.all_defs())
+      if (NewDef.getReg() == OldDef.getReg() &&
+          NewDef.getSubReg() == OldDef.getSubReg())
+        NewDef.setIsDead();
+  }
+}
+
 MachineInstr *TargetInstrInfo::foldMemoryOperand(MachineInstr &MI,
                                                  ArrayRef<unsigned> Ops, int FI,
                                                  MachineInstr *&CopyMI,
@@ -789,6 +801,7 @@ MachineInstr *TargetInstrInfo::foldMemoryOperand(MachineInstr &MI,
     // call instructions. We need copy it form old instruction.
     NewMI->cloneInstrSymbols(MF, MI);
 
+    preserveDeadDefs(MI, *NewMI);
     return NewMI;
   }
 
@@ -814,7 +827,9 @@ MachineInstr *TargetInstrInfo::foldMemoryOperand(MachineInstr &MI,
   } else
     loadRegFromStackSlot(*MBB, Pos, MO.getReg(), FI, RC, Register());
 
-  return &*--Pos;
+  NewMI = &*--Pos;
+  preserveDeadDefs(MI, *NewMI);
+  return NewMI;
 }
 
 MachineInstr *
@@ -864,6 +879,7 @@ TargetInstrInfo::foldMemoryOperand(MachineInstr &MI, ArrayRef<unsigned> Ops,
       NewMI->addMemOperand(MF, *I);
     }
   }
+  preserveDeadDefs(MI, *NewMI);
   return NewMI;
 }
 
