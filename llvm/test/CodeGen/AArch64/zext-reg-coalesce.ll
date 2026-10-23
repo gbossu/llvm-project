@@ -16,7 +16,7 @@ define i64 @zext_loaded_i64(ptr %p) {
 ; MIR:       %[[LOAD:[0-9]+]]:gpr64 = LDRXui
 ; MIR-NEXT:  %[[LOW:[0-9]+]]:gpr32 = COPY %[[LOAD]].sub_32
 ; MIR-NEXT:  %[[ZERO:[0-9]+]]:gpr32 = ORRWrr $wzr, %[[LOW]]
-; MIR-NEXT:  %[[WIDE:[0-9]+]]:gpr64all = SUBREG_TO_REG %[[ZERO]], %subreg.sub_32
+; MIR-NEXT:  undef %[[WIDE:[0-9]+]].sub_32:gpr64 = COPY %[[ZERO]]
   %wide = load volatile i64, ptr %p, align 8
   %low = trunc i64 %wide to i32
   %result = zext i32 %low to i64

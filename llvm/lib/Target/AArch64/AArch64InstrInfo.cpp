@@ -1123,16 +1123,19 @@ static unsigned canFoldIntoCSel(const MachineRegisterInfo &MRI, unsigned VReg,
   unsigned SrcReg = 0;
   switch (DefMI->getOpcode()) {
   case AArch64::SUBREG_TO_REG:
-    // Check for the following way to define an 64-bit immediate:
+  case TargetOpcode::REG_SEQUENCE:
+    // Check for a 64-bit immediate built from a 32-bit MOV:
     //   %0:gpr32 = MOVi32imm 1
-    //   %1:gpr64 = SUBREG_TO_REG %0:gpr32, %subreg.sub_32
-    if (!DefMI->getOperand(1).isReg())
-      return 0;
-    if (!DefMI->getOperand(2).isImm() ||
+    //   %1:gpr64 = REG_SEQUENCE %0:gpr32, %subreg.sub_32
+    if ((DefMI->getOpcode() == TargetOpcode::REG_SEQUENCE &&
+         DefMI->getNumOperands() != 3) ||
+        !DefMI->getOperand(1).isReg() ||
+        !DefMI->getOperand(1).getReg().isVirtual() ||
+        !DefMI->getOperand(2).isImm() ||
         DefMI->getOperand(2).getImm() != AArch64::sub_32)
       return 0;
     DefMI = MRI.getVRegDef(DefMI->getOperand(1).getReg());
-    if (DefMI->getOpcode() != AArch64::MOVi32imm)
+    if (!DefMI || DefMI->getOpcode() != AArch64::MOVi32imm)
       return 0;
     if (!DefMI->getOperand(1).isImm() || DefMI->getOperand(1).getImm() != 1)
       return 0;
@@ -3839,14 +3842,16 @@ bool AArch64InstrInfo::canFoldIntoAddrMode(const MachineInstr &MemI,
       AM.Form = ExtAddrMode::Formula::SExtScaledReg;
       return true;
 
-    case TargetOpcode::SUBREG_TO_REG: {
+    case TargetOpcode::SUBREG_TO_REG:
+    case TargetOpcode::REG_SEQUENCE: {
       // mov Wa, Wm
       // ldr Xd, [Xn, Xa, lsl #N]
       // ->
       // ldr Xd, [Xn, Wm, uxtw #N]
 
-      // Zero-extension looks like an ORRWrs followed by a SUBREG_TO_REG.
-      if (AddrI.getOperand(2).getImm() != AArch64::sub_32)
+      // Zero-extension looks like an ORRWrs followed by a sub_32 wrapper.
+      if (AddrI.getNumOperands() != 3 ||
+          AddrI.getOperand(2).getImm() != AArch64::sub_32)
         return false;
 
       const MachineRegisterInfo &MRI = AddrI.getMF()->getRegInfo();

@@ -874,8 +874,8 @@ define i64 @fetch_and_or_64(ptr %p) #0 {
 ; CHECK-OUTLINE-O0:       ; %bb.0:
 ; CHECK-OUTLINE-O0-NEXT:    stp x29, x30, [sp, #-16]! ; 16-byte Folded Spill
 ; CHECK-OUTLINE-O0-NEXT:    mov x1, x0
-; CHECK-OUTLINE-O0-NEXT:    mov w8, #7 ; =0x7
-; CHECK-OUTLINE-O0-NEXT:    mov w0, w8
+; CHECK-OUTLINE-O0-NEXT:    mov w0, #7 ; =0x7
+; CHECK-OUTLINE-O0-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-OUTLINE-O0-NEXT:    bl ___aarch64_ldset8_relax
 ; CHECK-OUTLINE-O0-NEXT:    ldp x29, x30, [sp], #16 ; 16-byte Folded Reload
 ; CHECK-OUTLINE-O0-NEXT:    ret
@@ -889,7 +889,7 @@ define i64 @fetch_and_or_64(ptr %p) #0 {
 ; CHECK-LSE-O0-LABEL: fetch_and_or_64:
 ; CHECK-LSE-O0:       ; %bb.0:
 ; CHECK-LSE-O0-NEXT:    mov w8, #7 ; =0x7
-; CHECK-LSE-O0-NEXT:    ; kill: def $x8 killed $w8
+; CHECK-LSE-O0-NEXT:    ; kill: def $w8 killed $w8 def $x8
 ; CHECK-LSE-O0-NEXT:    ldset x8, x0, [x0]
 ; CHECK-LSE-O0-NEXT:    ret
   %val = atomicrmw or ptr %p, i64 7 monotonic
@@ -2086,8 +2086,8 @@ define void @store_trunc(i32 %val, ptr %p8, ptr %p16, i64 %inp64) {
 ; CHECK-NOLSE-O0-NEXT:    mov w9, w0
 ; CHECK-NOLSE-O0-NEXT:    mov x10, x2
 ; CHECK-NOLSE-O0-NEXT:    mov x8, x3
-; CHECK-NOLSE-O0-NEXT:    mov w11, #4 ; =0x4
-; CHECK-NOLSE-O0-NEXT:    mov w0, w11
+; CHECK-NOLSE-O0-NEXT:    mov w0, #4 ; =0x4
+; CHECK-NOLSE-O0-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-NOLSE-O0-NEXT:    mov w3, #5 ; =0x5
 ; CHECK-NOLSE-O0-NEXT:    add x2, sp, #12
 ; CHECK-NOLSE-O0-NEXT:    stlrb w9, [x1]
@@ -2109,8 +2109,8 @@ define void @store_trunc(i32 %val, ptr %p8, ptr %p16, i64 %inp64) {
 ; CHECK-OUTLINE-O0-NEXT:    mov w9, w0
 ; CHECK-OUTLINE-O0-NEXT:    mov x10, x2
 ; CHECK-OUTLINE-O0-NEXT:    mov x8, x3
-; CHECK-OUTLINE-O0-NEXT:    mov w11, #4 ; =0x4
-; CHECK-OUTLINE-O0-NEXT:    mov w0, w11
+; CHECK-OUTLINE-O0-NEXT:    mov w0, #4 ; =0x4
+; CHECK-OUTLINE-O0-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-OUTLINE-O0-NEXT:    mov w3, #5 ; =0x5
 ; CHECK-OUTLINE-O0-NEXT:    add x2, sp, #12
 ; CHECK-OUTLINE-O0-NEXT:    stlrb w9, [x1]
@@ -2150,8 +2150,8 @@ define void @store_trunc(i32 %val, ptr %p8, ptr %p16, i64 %inp64) {
 ; CHECK-LSE-O0-NEXT:    mov x9, x0
 ; CHECK-LSE-O0-NEXT:    mov x10, x2
 ; CHECK-LSE-O0-NEXT:    mov x8, x3
-; CHECK-LSE-O0-NEXT:    mov w11, #4 ; =0x4
-; CHECK-LSE-O0-NEXT:    mov x0, x11
+; CHECK-LSE-O0-NEXT:    mov w0, #4 ; =0x4
+; CHECK-LSE-O0-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-LSE-O0-NEXT:    mov w3, #5 ; =0x5
 ; CHECK-LSE-O0-NEXT:    add x2, sp, #12
 ; CHECK-LSE-O0-NEXT:    stlrb w9, [x1]

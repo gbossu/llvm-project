@@ -222,49 +222,49 @@ define <10 x i32> @load_factor3_x25(ptr %ptr) {
 ; NO_NEON-NEXT:    .cfi_offset w23, -40
 ; NO_NEON-NEXT:    .cfi_offset w24, -48
 ; NO_NEON-NEXT:    .cfi_offset w25, -64
-; NO_NEON-NEXT:    ldp w10, w9, [x0, #48]
-; NO_NEON-NEXT:    ldp w12, w11, [x0, #72]
-; NO_NEON-NEXT:    ldp w14, w13, [x0, #112]
-; NO_NEON-NEXT:    ldp w15, w16, [x0, #104]
-; NO_NEON-NEXT:    ldp w18, w17, [x0, #96]
-; NO_NEON-NEXT:    ldp w2, w1, [x0, #88]
+; NO_NEON-NEXT:    ldp w13, w11, [x0, #48]
+; NO_NEON-NEXT:    ldp w15, w14, [x0, #72]
+; NO_NEON-NEXT:    ldp w16, w10, [x0, #112]
+; NO_NEON-NEXT:    ldp w9, w17, [x0, #104]
+; NO_NEON-NEXT:    ldp w1, w18, [x0, #96]
+; NO_NEON-NEXT:    ldp w2, w12, [x0, #88]
 ; NO_NEON-NEXT:    ldp w3, w4, [x0, #80]
-; NO_NEON-NEXT:    add w17, w18, w17
-; NO_NEON-NEXT:    add w14, w16, w14
-; NO_NEON-NEXT:    add w11, w12, w11
-; NO_NEON-NEXT:    add w9, w10, w9
-; NO_NEON-NEXT:    add w13, w14, w13
-; NO_NEON-NEXT:    add w14, w17, w15
-; NO_NEON-NEXT:    add w12, w4, w2
-; NO_NEON-NEXT:    add w11, w11, w3
-; NO_NEON-NEXT:    orr x13, x14, x13, lsl #32
-; NO_NEON-NEXT:    ldp w16, w10, [x0, #16]
-; NO_NEON-NEXT:    ldp w18, w2, [x0, #8]
+; NO_NEON-NEXT:    add w18, w1, w18
+; NO_NEON-NEXT:    add w16, w17, w16
+; NO_NEON-NEXT:    add w14, w15, w14
+; NO_NEON-NEXT:    add w13, w13, w11
+; NO_NEON-NEXT:    add w10, w16, w10
+; NO_NEON-NEXT:    add w9, w18, w9
+; NO_NEON-NEXT:    add w15, w4, w2
+; NO_NEON-NEXT:    add w14, w14, w3
+; NO_NEON-NEXT:    orr x9, x9, x10, lsl #32
+; NO_NEON-NEXT:    ldp w1, w17, [x0, #16]
+; NO_NEON-NEXT:    ldp w11, w2, [x0, #8]
 ; NO_NEON-NEXT:    ldp w5, w4, [x0]
 ; NO_NEON-NEXT:    ldp w7, w6, [x0, #24]
 ; NO_NEON-NEXT:    ldp w20, w19, [x0, #64]
 ; NO_NEON-NEXT:    ldp w21, w22, [x0, #56]
 ; NO_NEON-NEXT:    ldp w24, w23, [x0, #40]
 ; NO_NEON-NEXT:    ldp w25, w0, [x0, #32]
-; NO_NEON-NEXT:    add w12, w12, w1
+; NO_NEON-NEXT:    add w12, w15, w12
 ; NO_NEON-NEXT:    add w20, w22, w20
 ; NO_NEON-NEXT:    add w6, w7, w6
-; NO_NEON-NEXT:    orr x11, x11, x12, lsl #32
-; NO_NEON-NEXT:    add w16, w2, w16
+; NO_NEON-NEXT:    orr x12, x14, x12, lsl #32
+; NO_NEON-NEXT:    add w1, w2, w1
 ; NO_NEON-NEXT:    add w2, w5, w4
 ; NO_NEON-NEXT:    add w0, w0, w24
-; NO_NEON-NEXT:    add w10, w16, w10
-; NO_NEON-NEXT:    add w14, w20, w19
-; NO_NEON-NEXT:    add w16, w0, w23
-; NO_NEON-NEXT:    add w9, w9, w21
-; NO_NEON-NEXT:    add w12, w6, w25
-; NO_NEON-NEXT:    stp x11, x13, [x8, #24]
-; NO_NEON-NEXT:    add w13, w2, w18
-; NO_NEON-NEXT:    orr x9, x9, x14, lsl #32
-; NO_NEON-NEXT:    orr x12, x12, x16, lsl #32
+; NO_NEON-NEXT:    add w17, w1, w17
+; NO_NEON-NEXT:    add w10, w20, w19
+; NO_NEON-NEXT:    add w0, w0, w23
+; NO_NEON-NEXT:    add w13, w13, w21
+; NO_NEON-NEXT:    add w14, w6, w25
+; NO_NEON-NEXT:    stp x12, x9, [x8, #24]
+; NO_NEON-NEXT:    add w9, w2, w11
 ; NO_NEON-NEXT:    orr x10, x13, x10, lsl #32
-; NO_NEON-NEXT:    stp x12, x9, [x8, #8]
-; NO_NEON-NEXT:    str x10, [x8]
+; NO_NEON-NEXT:    orr x11, x14, x0, lsl #32
+; NO_NEON-NEXT:    orr x9, x9, x17, lsl #32
+; NO_NEON-NEXT:    stp x11, x10, [x8, #8]
+; NO_NEON-NEXT:    str x9, [x8]
 ; NO_NEON-NEXT:    ldp x20, x19, [sp, #48] // 16-byte Folded Reload
 ; NO_NEON-NEXT:    ldp x22, x21, [sp, #32] // 16-byte Folded Reload
 ; NO_NEON-NEXT:    ldp x24, x23, [sp, #16] // 16-byte Folded Reload

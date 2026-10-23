@@ -3521,6 +3521,10 @@ static const MachineInstr *stripVRegCopies(const MachineRegisterInfo &MRI,
       Reg = DefMI->getOperand(1).getReg();
       continue;
     }
+    if (Opcode == TargetOpcode::REG_SEQUENCE && DefMI->getNumOperands() == 3) {
+      Reg = DefMI->getOperand(1).getReg();
+      continue;
+    }
 
     return DefMI;
   }

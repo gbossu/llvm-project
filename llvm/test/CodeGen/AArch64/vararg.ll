@@ -51,8 +51,8 @@ define i64 @vararg(...) #0 {
 ; CHECK-SD-NEXT:    sub x8, x29, #72
 ; CHECK-SD-NEXT:    add x8, x8, #64
 ; CHECK-SD-NEXT:    str x8, [x29]
-; CHECK-SD-NEXT:    mov w8, #1 // =0x1
-; CHECK-SD-NEXT:    mov w0, w8
+; CHECK-SD-NEXT:    mov w0, #1 // =0x1
+; CHECK-SD-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-SD-NEXT:    .cfi_def_cfa wsp, 224
 ; CHECK-SD-NEXT:    ldp x29, x30, [sp, #208] // 16-byte Folded Reload
 ; CHECK-SD-NEXT:    add sp, sp, #224
@@ -86,8 +86,8 @@ define i64 @vararg(...) #0 {
 ; CHECK-GI-NEXT:    str q5, [sp, #96]
 ; CHECK-GI-NEXT:    str q6, [sp, #112]
 ; CHECK-GI-NEXT:    str q7, [sp, #128]
-; CHECK-GI-NEXT:    mov w8, #1 // =0x1
-; CHECK-GI-NEXT:    mov w0, w8
+; CHECK-GI-NEXT:    mov w0, #1 // =0x1
+; CHECK-GI-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-GI-NEXT:    add x9, sp, #8
 ; CHECK-GI-NEXT:    add x8, x29, #16
 ; CHECK-GI-NEXT:    str x8, [x9]
@@ -143,8 +143,8 @@ define i64 @vararg_many_gpr(i64 %a1, i64 %a2, i64 %a3, i64 %a4, i64 %a5, i64 %a6
 ; CHECK-SD-NEXT:    sub x8, x29, #16
 ; CHECK-SD-NEXT:    add x8, x8, #8
 ; CHECK-SD-NEXT:    str x8, [x29]
-; CHECK-SD-NEXT:    mov w8, #1 // =0x1
-; CHECK-SD-NEXT:    mov w0, w8
+; CHECK-SD-NEXT:    mov w0, #1 // =0x1
+; CHECK-SD-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-SD-NEXT:    .cfi_def_cfa wsp, 160
 ; CHECK-SD-NEXT:    ldp x29, x30, [sp, #144] // 16-byte Folded Reload
 ; CHECK-SD-NEXT:    add sp, sp, #160
@@ -171,8 +171,8 @@ define i64 @vararg_many_gpr(i64 %a1, i64 %a2, i64 %a3, i64 %a4, i64 %a5, i64 %a6
 ; CHECK-GI-NEXT:    str q5, [sp, #96]
 ; CHECK-GI-NEXT:    str q6, [sp, #112]
 ; CHECK-GI-NEXT:    str q7, [sp, #128]
-; CHECK-GI-NEXT:    mov w8, #1 // =0x1
-; CHECK-GI-NEXT:    mov w0, w8
+; CHECK-GI-NEXT:    mov w0, #1 // =0x1
+; CHECK-GI-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-GI-NEXT:    add x9, sp, #8
 ; CHECK-GI-NEXT:    add x8, x29, #16
 ; CHECK-GI-NEXT:    str x8, [x9]
@@ -228,8 +228,8 @@ define i64 @vararg_many_float(float %a1, float %a2, float %a3, float %a4, float 
 ; CHECK-SD-NEXT:    add x8, sp, #24
 ; CHECK-SD-NEXT:    add x8, x8, #64
 ; CHECK-SD-NEXT:    str x8, [x29]
-; CHECK-SD-NEXT:    mov w8, #1 // =0x1
-; CHECK-SD-NEXT:    mov w0, w8
+; CHECK-SD-NEXT:    mov w0, #1 // =0x1
+; CHECK-SD-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-SD-NEXT:    .cfi_def_cfa wsp, 112
 ; CHECK-SD-NEXT:    ldp x29, x30, [sp, #96] // 16-byte Folded Reload
 ; CHECK-SD-NEXT:    add sp, sp, #112
@@ -256,8 +256,8 @@ define i64 @vararg_many_float(float %a1, float %a2, float %a3, float %a4, float 
 ; CHECK-GI-NEXT:    str x6, [sp, #80]
 ; CHECK-GI-NEXT:    str x7, [sp, #88]
 ; CHECK-GI-NEXT:    str q7, [sp, #16]
-; CHECK-GI-NEXT:    mov w8, #1 // =0x1
-; CHECK-GI-NEXT:    mov w0, w8
+; CHECK-GI-NEXT:    mov w0, #1 // =0x1
+; CHECK-GI-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-GI-NEXT:    add x9, sp, #8
 ; CHECK-GI-NEXT:    add x8, x29, #16
 ; CHECK-GI-NEXT:    str x8, [x9]
@@ -318,8 +318,8 @@ define i64 @gpr1_fpr1(i32 %i, float %f, ...) #0 {
 ; CHECK-SD-NEXT:    sub x8, x29, #64
 ; CHECK-SD-NEXT:    add x8, x8, #56
 ; CHECK-SD-NEXT:    str x8, [x29]
-; CHECK-SD-NEXT:    mov w8, #1 // =0x1
-; CHECK-SD-NEXT:    mov w0, w8
+; CHECK-SD-NEXT:    mov w0, #1 // =0x1
+; CHECK-SD-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-SD-NEXT:    .cfi_def_cfa wsp, 192
 ; CHECK-SD-NEXT:    ldp x29, x30, [sp, #176] // 16-byte Folded Reload
 ; CHECK-SD-NEXT:    add sp, sp, #192
@@ -351,8 +351,8 @@ define i64 @gpr1_fpr1(i32 %i, float %f, ...) #0 {
 ; CHECK-GI-NEXT:    str q5, [sp, #80]
 ; CHECK-GI-NEXT:    str q6, [sp, #96]
 ; CHECK-GI-NEXT:    str q7, [sp, #112]
-; CHECK-GI-NEXT:    mov w8, #1 // =0x1
-; CHECK-GI-NEXT:    mov w0, w8
+; CHECK-GI-NEXT:    mov w0, #1 // =0x1
+; CHECK-GI-NEXT:    // kill: def $w0 killed $w0 def $x0
 ; CHECK-GI-NEXT:    add x9, sp, #8
 ; CHECK-GI-NEXT:    add x8, x29, #16
 ; CHECK-GI-NEXT:    str x8, [x9]

@@ -2175,8 +2175,8 @@ define i16 @zextbitconvert_v4i16(i32 %x) {
 ; CHECK-FI-LABEL: zextbitconvert_v4i16:
 ; CHECK-FI:       // %bb.0: // %entry
 ; CHECK-FI-NEXT:    mov w8, w0
-; CHECK-FI-NEXT:    mov w0, w8
-; CHECK-FI-NEXT:    fmov d0, x0
+; CHECK-FI-NEXT:    // kill: def $w8 killed $w8 def $x8
+; CHECK-FI-NEXT:    fmov d0, x8
 ; CHECK-FI-NEXT:    rev64 v1.4h, v0.4h
 ; CHECK-FI-NEXT:    // implicit-def: $q0
 ; CHECK-FI-NEXT:    fmov d0, d1

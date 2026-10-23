@@ -25,8 +25,8 @@ body:             |
   ; CHECK-NEXT:   successors: %bb.2(0x80000000)
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   [[MOVi32imm:%[0-9]+]]:gpr32 = MOVi32imm 4
-  ; CHECK-NEXT:   [[SUBREG_TO_REG:%[0-9]+]]:gpr64all = SUBREG_TO_REG [[MOVi32imm]], %subreg.sub_32
-  ; CHECK-NEXT:   [[COPY2:%[0-9]+]]:gpr32 = COPY [[SUBREG_TO_REG]].sub_32
+  ; CHECK-NEXT:   [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[MOVi32imm]], %subreg.sub_32
+  ; CHECK-NEXT:   [[COPY2:%[0-9]+]]:gpr32 = COPY [[REG_SEQUENCE]].sub_32
   ; CHECK-NEXT:   STLRW [[COPY2]], [[COPY]] :: (store release (i32))
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.2:
@@ -71,8 +71,8 @@ body:             |
   ; CHECK-NEXT:   successors: %bb.2(0x80000000)
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   [[MOVi32imm:%[0-9]+]]:gpr32 = MOVi32imm 4
-  ; CHECK-NEXT:   [[SUBREG_TO_REG:%[0-9]+]]:gpr64all = SUBREG_TO_REG [[MOVi32imm]], %subreg.sub_32
-  ; CHECK-NEXT:   [[COPY2:%[0-9]+]]:gpr32 = COPY [[SUBREG_TO_REG]].sub_32
+  ; CHECK-NEXT:   [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[MOVi32imm]], %subreg.sub_32
+  ; CHECK-NEXT:   [[COPY2:%[0-9]+]]:gpr32 = COPY [[REG_SEQUENCE]].sub_32
   ; CHECK-NEXT:   STLRH [[COPY2]], [[COPY]] :: (store release (i16))
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.2:
@@ -117,8 +117,8 @@ body:             |
   ; CHECK-NEXT:   successors: %bb.2(0x80000000)
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   [[MOVi32imm:%[0-9]+]]:gpr32 = MOVi32imm 4
-  ; CHECK-NEXT:   [[SUBREG_TO_REG:%[0-9]+]]:gpr64all = SUBREG_TO_REG [[MOVi32imm]], %subreg.sub_32
-  ; CHECK-NEXT:   [[COPY2:%[0-9]+]]:gpr32 = COPY [[SUBREG_TO_REG]].sub_32
+  ; CHECK-NEXT:   [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[MOVi32imm]], %subreg.sub_32
+  ; CHECK-NEXT:   [[COPY2:%[0-9]+]]:gpr32 = COPY [[REG_SEQUENCE]].sub_32
   ; CHECK-NEXT:   STLRB [[COPY2]], [[COPY]] :: (store release (i8))
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.2:

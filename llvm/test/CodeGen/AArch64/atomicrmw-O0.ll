@@ -185,7 +185,7 @@ define i64 @test_rmw_add_64(ptr %dst)   {
 ; LSE-LABEL: test_rmw_add_64:
 ; LSE:       // %bb.0: // %entry
 ; LSE-NEXT:    mov w8, #1 // =0x1
-; LSE-NEXT:    // kill: def $x8 killed $w8
+; LSE-NEXT:    // kill: def $w8 killed $w8 def $x8
 ; LSE-NEXT:    ldaddal x8, x0, [x0]
 ; LSE-NEXT:    ret
 entry:

@@ -277,7 +277,7 @@ define bfloat @sitofp_bf_i164(i64 %a) nounwind ssp {
 ; CHECK-NEXT:    ands x10, x10, #0xfff
 ; CHECK-NEXT:    csel w9, wzr, w9, eq
 ; CHECK-NEXT:    mov w9, w9
-; CHECK-NEXT:    // kill: def $x9 killed $w9
+; CHECK-NEXT:    // kill: def $w9 killed $w9 def $x9
 ; CHECK-NEXT:    orr x8, x8, x9
 ; CHECK-NEXT:    fmov d0, x8
 ; CHECK-NEXT:    fcvtxn s0, d0
@@ -389,7 +389,7 @@ define bfloat @uitofp_bf_i64(i64 %a) nounwind ssp {
 ; CHECK-NEXT:    ands x10, x0, #0xfff
 ; CHECK-NEXT:    csel w9, wzr, w9, eq
 ; CHECK-NEXT:    mov w9, w9
-; CHECK-NEXT:    // kill: def $x9 killed $w9
+; CHECK-NEXT:    // kill: def $w9 killed $w9 def $x9
 ; CHECK-NEXT:    orr x8, x8, x9
 ; CHECK-NEXT:    fmov d0, x8
 ; CHECK-NEXT:    fcvtxn s0, d0

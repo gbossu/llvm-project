@@ -214,8 +214,8 @@ body: |
   bb.0:
     ; CHECK-LABEL: name: opt_i64
     ; CHECK: [[MOVi32imm:%[0-9]+]]:gpr32 = MOVi32imm 42
-    ; CHECK-NEXT: [[SUBREG_TO_REG:%[0-9]+]]:gpr64all = SUBREG_TO_REG [[MOVi32imm]], %subreg.sub_32
-    ; CHECK-NEXT: $x0 = COPY [[SUBREG_TO_REG]]
+    ; CHECK-NEXT: [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[MOVi32imm]], %subreg.sub_32
+    ; CHECK-NEXT: $x0 = COPY [[REG_SEQUENCE]]
     ; CHECK-NEXT: RET_ReallyLR implicit $x0
     %0:gpr(i64) = G_CONSTANT i64 42
     $x0 = COPY %0(i64)

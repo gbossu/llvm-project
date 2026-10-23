@@ -62,8 +62,8 @@ body:             |
     ; CHECK-NEXT: {{  $}}
     ; CHECK-NEXT: [[COPY:%[0-9]+]]:gpr64 = COPY $x0
     ; CHECK-NEXT: [[MOVi32imm:%[0-9]+]]:gpr32 = MOVi32imm 13132
-    ; CHECK-NEXT: [[SUBREG_TO_REG:%[0-9]+]]:gpr64 = SUBREG_TO_REG [[MOVi32imm]], %subreg.sub_32
-    ; CHECK-NEXT: [[SUBSXrr:%[0-9]+]]:gpr64 = SUBSXrr [[COPY]], [[SUBREG_TO_REG]], implicit-def $nzcv
+    ; CHECK-NEXT: [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[MOVi32imm]], %subreg.sub_32
+    ; CHECK-NEXT: [[SUBSXrr:%[0-9]+]]:gpr64 = SUBSXrr [[COPY]], [[REG_SEQUENCE]], implicit-def $nzcv
     ; CHECK-NEXT: [[CSINCWr:%[0-9]+]]:gpr32 = CSINCWr $wzr, $wzr, 1, implicit $nzcv
     ; CHECK-NEXT: $w0 = COPY [[CSINCWr]]
     ; CHECK-NEXT: RET_ReallyLR implicit $w0

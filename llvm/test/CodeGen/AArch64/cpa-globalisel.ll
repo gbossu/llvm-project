@@ -53,13 +53,13 @@ define void @maddpt1(i32 %pos, ptr %val) {
 ; CHECK-CPA-O0:       // %bb.0: // %entry
 ; CHECK-CPA-O0-NEXT:    adrp x10, array2
 ; CHECK-CPA-O0-NEXT:    add x10, x10, :lo12:array2
-; CHECK-CPA-O0-NEXT:    mov w8, #48 // =0x30
-; CHECK-CPA-O0-NEXT:    mov w2, w8
+; CHECK-CPA-O0-NEXT:    mov w2, #48 // =0x30
+; CHECK-CPA-O0-NEXT:    // kill: def $w2 killed $w2 def $x2
 ; CHECK-CPA-O0-NEXT:    // implicit-def: $x8
 ; CHECK-CPA-O0-NEXT:    mov w8, w0
 ; CHECK-CPA-O0-NEXT:    sxtw x8, w8
 ; CHECK-CPA-O0-NEXT:    mov w9, #48 // =0x30
-; CHECK-CPA-O0-NEXT:    // kill: def $x9 killed $w9
+; CHECK-CPA-O0-NEXT:    // kill: def $w9 killed $w9 def $x9
 ; CHECK-CPA-O0-NEXT:    maddpt x0, x8, x9, x10
 ; CHECK-CPA-O0-NEXT:    b memcpy
 ;
@@ -83,8 +83,8 @@ define void @maddpt1(i32 %pos, ptr %val) {
 ; CHECK-NOCPA-O0:       // %bb.0: // %entry
 ; CHECK-NOCPA-O0-NEXT:    adrp x9, array2
 ; CHECK-NOCPA-O0-NEXT:    add x9, x9, :lo12:array2
-; CHECK-NOCPA-O0-NEXT:    mov w8, #48 // =0x30
-; CHECK-NOCPA-O0-NEXT:    mov w2, w8
+; CHECK-NOCPA-O0-NEXT:    mov w2, #48 // =0x30
+; CHECK-NOCPA-O0-NEXT:    // kill: def $w2 killed $w2 def $x2
 ; CHECK-NOCPA-O0-NEXT:    mov w8, #48 // =0x30
 ; CHECK-NOCPA-O0-NEXT:    smaddl x0, w0, w8, x9
 ; CHECK-NOCPA-O0-NEXT:    b memcpy
@@ -115,18 +115,18 @@ define void @msubpt1(i32 %index, i32 %elem) {
 ; CHECK-CPA-O0-NEXT:    adrp x8, array2
 ; CHECK-CPA-O0-NEXT:    add x8, x8, :lo12:array2
 ; CHECK-CPA-O0-NEXT:    mov w9, #288 // =0x120
-; CHECK-CPA-O0-NEXT:    // kill: def $x9 killed $w9
+; CHECK-CPA-O0-NEXT:    // kill: def $w9 killed $w9 def $x9
 ; CHECK-CPA-O0-NEXT:    addpt x10, x8, x9
 ; CHECK-CPA-O0-NEXT:    mov w9, #96 // =0x60
-; CHECK-CPA-O0-NEXT:    // kill: def $x9 killed $w9
+; CHECK-CPA-O0-NEXT:    // kill: def $w9 killed $w9 def $x9
 ; CHECK-CPA-O0-NEXT:    addpt x1, x8, x9
-; CHECK-CPA-O0-NEXT:    mov w8, #48 // =0x30
-; CHECK-CPA-O0-NEXT:    mov w2, w8
+; CHECK-CPA-O0-NEXT:    mov w2, #48 // =0x30
+; CHECK-CPA-O0-NEXT:    // kill: def $w2 killed $w2 def $x2
 ; CHECK-CPA-O0-NEXT:    // implicit-def: $x8
 ; CHECK-CPA-O0-NEXT:    mov w8, w0
 ; CHECK-CPA-O0-NEXT:    sxtw x9, w8
 ; CHECK-CPA-O0-NEXT:    mov w8, #48 // =0x30
-; CHECK-CPA-O0-NEXT:    // kill: def $x8 killed $w8
+; CHECK-CPA-O0-NEXT:    // kill: def $w8 killed $w8 def $x8
 ; CHECK-CPA-O0-NEXT:    msubpt x0, x8, x9, x10
 ; CHECK-CPA-O0-NEXT:    b memcpy
 ;
@@ -152,13 +152,13 @@ define void @msubpt1(i32 %index, i32 %elem) {
 ; CHECK-NOCPA-O0-NEXT:    add x9, x9, :lo12:array2
 ; CHECK-NOCPA-O0-NEXT:    add x8, x9, #288
 ; CHECK-NOCPA-O0-NEXT:    add x1, x9, #96
-; CHECK-NOCPA-O0-NEXT:    mov w9, #48 // =0x30
-; CHECK-NOCPA-O0-NEXT:    mov w2, w9
+; CHECK-NOCPA-O0-NEXT:    mov w2, #48 // =0x30
+; CHECK-NOCPA-O0-NEXT:    // kill: def $w2 killed $w2 def $x2
 ; CHECK-NOCPA-O0-NEXT:    // implicit-def: $x9
 ; CHECK-NOCPA-O0-NEXT:    mov w9, w0
 ; CHECK-NOCPA-O0-NEXT:    sxtw x9, w9
 ; CHECK-NOCPA-O0-NEXT:    mov w10, #48 // =0x30
-; CHECK-NOCPA-O0-NEXT:    // kill: def $x10 killed $w10
+; CHECK-NOCPA-O0-NEXT:    // kill: def $w10 killed $w10 def $x10
 ; CHECK-NOCPA-O0-NEXT:    mneg x9, x9, x10
 ; CHECK-NOCPA-O0-NEXT:    add x0, x8, x9
 ; CHECK-NOCPA-O0-NEXT:    b memcpy
@@ -193,7 +193,7 @@ define void @subpt1(i32 %index, i32 %elem) {
 ; CHECK-CPA-O0-NEXT:    adrp x10, array
 ; CHECK-CPA-O0-NEXT:    add x10, x10, :lo12:array
 ; CHECK-CPA-O0-NEXT:    mov w8, #96 // =0x60
-; CHECK-CPA-O0-NEXT:    // kill: def $x8 killed $w8
+; CHECK-CPA-O0-NEXT:    // kill: def $w8 killed $w8 def $x8
 ; CHECK-CPA-O0-NEXT:    addpt x8, x10, x8
 ; CHECK-CPA-O0-NEXT:    mov w9, #-16 // =0xfffffff0
 ; CHECK-CPA-O0-NEXT:    smull x9, w0, w9
@@ -248,7 +248,7 @@ define void @subpt2(i32 %index, i32 %elem) {
 ; CHECK-CPA-O0-NEXT:    adrp x10, array
 ; CHECK-CPA-O0-NEXT:    add x10, x10, :lo12:array
 ; CHECK-CPA-O0-NEXT:    mov w8, #96 // =0x60
-; CHECK-CPA-O0-NEXT:    // kill: def $x8 killed $w8
+; CHECK-CPA-O0-NEXT:    // kill: def $w8 killed $w8 def $x8
 ; CHECK-CPA-O0-NEXT:    addpt x8, x10, x8
 ; CHECK-CPA-O0-NEXT:    subs x9, x9, w0, sxtw
 ; CHECK-CPA-O0-NEXT:    ldr q0, [x10, #32]
@@ -549,7 +549,7 @@ define i64 @arith2(ptr noundef %0, i64 noundef %1, i64 noundef %2, i32 noundef %
 ; CHECK-CPA-O0-NEXT:    ldr x10, [sp, #24]
 ; CHECK-CPA-O0-NEXT:    ldrsw x8, [sp, #4]
 ; CHECK-CPA-O0-NEXT:    mov w9, #48 // =0x30
-; CHECK-CPA-O0-NEXT:    // kill: def $x9 killed $w9
+; CHECK-CPA-O0-NEXT:    // kill: def $w9 killed $w9 def $x9
 ; CHECK-CPA-O0-NEXT:    maddpt x8, x8, x9, x10
 ; CHECK-CPA-O0-NEXT:    ldr x8, [x8, #24]
 ; CHECK-CPA-O0-NEXT:    ldr x10, [sp, #16]
@@ -587,7 +587,7 @@ define i64 @arith2(ptr noundef %0, i64 noundef %1, i64 noundef %2, i32 noundef %
 ; CHECK-NOCPA-O0-NEXT:    ldr x10, [sp, #24]
 ; CHECK-NOCPA-O0-NEXT:    ldrsw x8, [sp, #4]
 ; CHECK-NOCPA-O0-NEXT:    mov w9, #48 // =0x30
-; CHECK-NOCPA-O0-NEXT:    // kill: def $x9 killed $w9
+; CHECK-NOCPA-O0-NEXT:    // kill: def $w9 killed $w9 def $x9
 ; CHECK-NOCPA-O0-NEXT:    // kill: def $w9 killed $w9 killed $x9
 ; CHECK-NOCPA-O0-NEXT:    // kill: def $w8 killed $w8 killed $x8
 ; CHECK-NOCPA-O0-NEXT:    smaddl x8, w8, w9, x10
@@ -653,7 +653,7 @@ define hidden void @multidim() {
 ; CHECK-CPA-O0-NEXT:    adrp x8, a
 ; CHECK-CPA-O0-NEXT:    add x8, x8, :lo12:a
 ; CHECK-CPA-O0-NEXT:    mov w10, #2 // =0x2
-; CHECK-CPA-O0-NEXT:    // kill: def $x10 killed $w10
+; CHECK-CPA-O0-NEXT:    // kill: def $w10 killed $w10 def $x10
 ; CHECK-CPA-O0-NEXT:    addpt x8, x8, x10
 ; CHECK-CPA-O0-NEXT:    adrp x10, .L.str
 ; CHECK-CPA-O0-NEXT:    add x10, x10, :lo12:.L.str

@@ -328,40 +328,40 @@ define void @interleave8_v3fp32(ptr %dst,  <vscale x 3 x float> %a,  <vscale x 3
 ; CHECK-NEXT:    zip1 z3.s, z3.s, z7.s
 ; CHECK-NEXT:    zip1 z5.s, z1.s, z5.s
 ; CHECK-NEXT:    mov w9, #3 // =0x3
-; CHECK-NEXT:    zip1 z6.s, z2.s, z6.s
+; CHECK-NEXT:    zip1 z2.s, z2.s, z6.s
 ; CHECK-NEXT:    zip1 z4.s, z0.s, z4.s
 ; CHECK-NEXT:    mul x9, x8, x9
 ; CHECK-NEXT:    zip2 z28.s, z25.s, z24.s
 ; CHECK-NEXT:    zip2 z29.s, z27.s, z26.s
 ; CHECK-NEXT:    addvl x10, sp, #31
-; CHECK-NEXT:    zip1 z7.s, z25.s, z24.s
-; CHECK-NEXT:    zip1 z24.s, z27.s, z26.s
+; CHECK-NEXT:    zip1 z6.s, z25.s, z24.s
+; CHECK-NEXT:    zip1 z7.s, z27.s, z26.s
 ; CHECK-NEXT:    addvl x10, x10, #13
-; CHECK-NEXT:    zip2 z25.s, z5.s, z3.s
-; CHECK-NEXT:    zip2 z26.s, z4.s, z6.s
+; CHECK-NEXT:    zip2 z24.s, z5.s, z3.s
+; CHECK-NEXT:    zip2 z25.s, z4.s, z2.s
 ; CHECK-NEXT:    addvl x11, sp, #20
-; CHECK-NEXT:    zip1 z27.s, z5.s, z3.s
-; CHECK-NEXT:    zip1 z4.s, z4.s, z6.s
+; CHECK-NEXT:    zip1 z26.s, z5.s, z3.s
+; CHECK-NEXT:    zip1 z2.s, z4.s, z2.s
 ; CHECK-NEXT:    zip2 z0.s, z29.s, z28.s
 ; CHECK-NEXT:    zip1 z1.s, z29.s, z28.s
-; CHECK-NEXT:    zip2 z2.s, z24.s, z7.s
-; CHECK-NEXT:    zip1 z3.s, z24.s, z7.s
-; CHECK-NEXT:    zip2 z5.s, z26.s, z25.s
-; CHECK-NEXT:    zip1 z7.s, z26.s, z25.s
+; CHECK-NEXT:    zip2 z3.s, z7.s, z6.s
+; CHECK-NEXT:    zip1 z4.s, z7.s, z6.s
+; CHECK-NEXT:    zip2 z5.s, z25.s, z24.s
+; CHECK-NEXT:    zip1 z7.s, z25.s, z24.s
 ; CHECK-NEXT:    whilelo p0.s, xzr, x9
 ; CHECK-NEXT:    cntw x9, all, mul #3
 ; CHECK-NEXT:    str z0, [sp, #51, mul vl]
-; CHECK-NEXT:    zip2 z6.s, z4.s, z27.s
+; CHECK-NEXT:    zip2 z6.s, z2.s, z26.s
 ; CHECK-NEXT:    str z1, [sp, #50, mul vl]
 ; CHECK-NEXT:    add x10, x10, x9
-; CHECK-NEXT:    zip1 z4.s, z4.s, z27.s
-; CHECK-NEXT:    str z2, [sp, #49, mul vl]
-; CHECK-NEXT:    str z3, [sp, #48, mul vl]
+; CHECK-NEXT:    zip1 z2.s, z2.s, z26.s
+; CHECK-NEXT:    str z3, [sp, #49, mul vl]
+; CHECK-NEXT:    str z4, [sp, #48, mul vl]
 ; CHECK-NEXT:    str z5, [sp, #47, mul vl]
 ; CHECK-NEXT:    str z7, [sp, #46, mul vl]
 ; CHECK-NEXT:    str z6, [sp, #45, mul vl]
-; CHECK-NEXT:    str z4, [sp, #44, mul vl]
-; CHECK-NEXT:    str z4, [sp, #52, mul vl]
+; CHECK-NEXT:    str z2, [sp, #44, mul vl]
+; CHECK-NEXT:    str z2, [sp, #52, mul vl]
 ; CHECK-NEXT:    ld1w { z24.s }, p0/z, [x10]
 ; CHECK-NEXT:    addvl x10, sp, #31
 ; CHECK-NEXT:    addvl x10, x10, #21
@@ -374,14 +374,14 @@ define void @interleave8_v3fp32(ptr %dst,  <vscale x 3 x float> %a,  <vscale x 3
 ; CHECK-NEXT:    str z0, [sp, #43, mul vl]
 ; CHECK-NEXT:    add x10, x10, x9
 ; CHECK-NEXT:    str z1, [sp, #42, mul vl]
-; CHECK-NEXT:    str z2, [sp, #41, mul vl]
+; CHECK-NEXT:    str z3, [sp, #41, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #55, mul vl]
 ; CHECK-NEXT:    ldr z24, [sp, #52, mul vl]
-; CHECK-NEXT:    str z3, [sp, #40, mul vl]
+; CHECK-NEXT:    str z4, [sp, #40, mul vl]
 ; CHECK-NEXT:    str z5, [sp, #39, mul vl]
 ; CHECK-NEXT:    str z7, [sp, #38, mul vl]
 ; CHECK-NEXT:    str z6, [sp, #37, mul vl]
-; CHECK-NEXT:    str z4, [sp, #36, mul vl]
+; CHECK-NEXT:    str z2, [sp, #36, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #54, mul vl]
 ; CHECK-NEXT:    ld1w { z24.s }, p0/z, [x10]
 ; CHECK-NEXT:    addvl x10, sp, #31
@@ -395,12 +395,12 @@ define void @interleave8_v3fp32(ptr %dst,  <vscale x 3 x float> %a,  <vscale x 3
 ; CHECK-NEXT:    add x9, x10, x9
 ; CHECK-NEXT:    str z1, [sp, #34, mul vl]
 ; CHECK-NEXT:    addvl x10, sp, #3
-; CHECK-NEXT:    str z2, [sp, #33, mul vl]
-; CHECK-NEXT:    str z3, [sp, #32, mul vl]
+; CHECK-NEXT:    str z3, [sp, #33, mul vl]
+; CHECK-NEXT:    str z4, [sp, #32, mul vl]
 ; CHECK-NEXT:    str z5, [sp, #31, mul vl]
 ; CHECK-NEXT:    str z7, [sp, #30, mul vl]
 ; CHECK-NEXT:    str z6, [sp, #29, mul vl]
-; CHECK-NEXT:    str z4, [sp, #28, mul vl]
+; CHECK-NEXT:    str z2, [sp, #28, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #3, mul vl]
 ; CHECK-NEXT:    ld1w { z24.s }, p0/z, [x9]
 ; CHECK-NEXT:    cntw x9
@@ -411,17 +411,17 @@ define void @interleave8_v3fp32(ptr %dst,  <vscale x 3 x float> %a,  <vscale x 3
 ; CHECK-NEXT:    str z0, [sp, #27, mul vl]
 ; CHECK-NEXT:    add x11, x11, x10
 ; CHECK-NEXT:    str z1, [sp, #26, mul vl]
-; CHECK-NEXT:    str z2, [sp, #25, mul vl]
+; CHECK-NEXT:    str z3, [sp, #25, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #59, mul vl]
 ; CHECK-NEXT:    ldr z24, [sp, #54, mul vl]
-; CHECK-NEXT:    str z3, [sp, #24, mul vl]
+; CHECK-NEXT:    str z4, [sp, #24, mul vl]
 ; CHECK-NEXT:    str z5, [sp, #23, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #58, mul vl]
 ; CHECK-NEXT:    ldr z24, [sp, #57, mul vl]
 ; CHECK-NEXT:    str z7, [sp, #22, mul vl]
 ; CHECK-NEXT:    str z6, [sp, #21, mul vl]
 ; CHECK-NEXT:    mov z24.s, p0/m, z5.s
-; CHECK-NEXT:    str z4, [sp, #20, mul vl]
+; CHECK-NEXT:    str z2, [sp, #20, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #61, mul vl]
 ; CHECK-NEXT:    ldr z24, [sp, #3, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #60, mul vl]
@@ -437,14 +437,14 @@ define void @interleave8_v3fp32(ptr %dst,  <vscale x 3 x float> %a,  <vscale x 3
 ; CHECK-NEXT:    add x10, x11, x10
 ; CHECK-NEXT:    str z1, [sp, #18, mul vl]
 ; CHECK-NEXT:    addvl x11, sp, #1
-; CHECK-NEXT:    str z2, [sp, #17, mul vl]
+; CHECK-NEXT:    str z3, [sp, #17, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #2, mul vl]
 ; CHECK-NEXT:    ldr z24, [sp, #62, mul vl]
-; CHECK-NEXT:    str z3, [sp, #16, mul vl]
+; CHECK-NEXT:    str z4, [sp, #16, mul vl]
 ; CHECK-NEXT:    str z5, [sp, #15, mul vl]
 ; CHECK-NEXT:    str z7, [sp, #14, mul vl]
 ; CHECK-NEXT:    str z6, [sp, #13, mul vl]
-; CHECK-NEXT:    str z4, [sp, #12, mul vl]
+; CHECK-NEXT:    str z2, [sp, #12, mul vl]
 ; CHECK-NEXT:    str z24, [sp, #1, mul vl]
 ; CHECK-NEXT:    ld1w { z24.s }, p0/z, [x10]
 ; CHECK-NEXT:    cnth x10
@@ -456,12 +456,12 @@ define void @interleave8_v3fp32(ptr %dst,  <vscale x 3 x float> %a,  <vscale x 3
 ; CHECK-NEXT:    str z0, [sp, #11, mul vl]
 ; CHECK-NEXT:    ldr z0, [sp, #2, mul vl]
 ; CHECK-NEXT:    str z1, [sp, #10, mul vl]
-; CHECK-NEXT:    str z2, [sp, #9, mul vl]
-; CHECK-NEXT:    str z3, [sp, #8, mul vl]
+; CHECK-NEXT:    str z3, [sp, #9, mul vl]
+; CHECK-NEXT:    str z4, [sp, #8, mul vl]
 ; CHECK-NEXT:    str z5, [sp, #7, mul vl]
 ; CHECK-NEXT:    str z7, [sp, #6, mul vl]
 ; CHECK-NEXT:    str z6, [sp, #5, mul vl]
-; CHECK-NEXT:    str z4, [sp, #4, mul vl]
+; CHECK-NEXT:    str z2, [sp, #4, mul vl]
 ; CHECK-NEXT:    str z0, [sp]
 ; CHECK-NEXT:    ld1w { z0.s }, p0/z, [x8]
 ; CHECK-NEXT:    mov x8, sp

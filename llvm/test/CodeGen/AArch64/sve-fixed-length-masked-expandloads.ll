@@ -1423,7 +1423,7 @@ define void @masked_load_v64f32(ptr %ap, ptr %bp, ptr %c) vscale_range(16,0) #0 
 ; CHECK-NEXT:    fmov w5, s5
 ; CHECK-NEXT:    bfi x25, x8, #6, #1
 ; CHECK-NEXT:    ubfiz x8, x30, #27, #1
-; CHECK-NEXT:    mov z3.b, z0.b[31]
+; CHECK-NEXT:    mov z2.b, z0.b[31]
 ; CHECK-NEXT:    orr x9, x10, x9
 ; CHECK-NEXT:    orr x10, x11, x14
 ; CHECK-NEXT:    ubfiz x11, x6, #16, #1
@@ -1431,20 +1431,20 @@ define void @masked_load_v64f32(ptr %ap, ptr %bp, ptr %c) vscale_range(16,0) #0 
 ; CHECK-NEXT:    orr x8, x10, x8
 ; CHECK-NEXT:    ubfiz x10, x7, #17, #1
 ; CHECK-NEXT:    ubfiz x13, x13, #29, #1
-; CHECK-NEXT:    mov z2.b, z0.b[32]
+; CHECK-NEXT:    mov z3.b, z0.b[32]
 ; CHECK-NEXT:    orr x9, x9, x11
 ; CHECK-NEXT:    orr x8, x8, x12
 ; CHECK-NEXT:    ubfiz x11, x5, #30, #1
-; CHECK-NEXT:    fmov w12, s3
+; CHECK-NEXT:    fmov w12, s2
 ; CHECK-NEXT:    orr x9, x9, x10
 ; CHECK-NEXT:    orr x8, x8, x13
 ; CHECK-NEXT:    mov z1.b, z0.b[33]
 ; CHECK-NEXT:    orr x9, x25, x9
 ; CHECK-NEXT:    orr x8, x8, x11
-; CHECK-NEXT:    orr x8, x9, x8
-; CHECK-NEXT:    fmov w9, s2
-; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    mov z2.b, z0.b[34]
+; CHECK-NEXT:    orr x8, x9, x8
+; CHECK-NEXT:    fmov w9, s3
+; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    and w9, w9, #0x1
 ; CHECK-NEXT:    orr x8, x8, x9, lsl #32
@@ -3248,25 +3248,25 @@ define void @masked_load_v64i8(ptr %ap, ptr %bp, ptr %c) #0 {
 ; VBITS_GE_512-NEXT:    umov w1, v0.b[8]
 ; VBITS_GE_512-NEXT:    umov w16, v0.b[9]
 ; VBITS_GE_512-NEXT:    mov z3.b, z0.b[18]
-; VBITS_GE_512-NEXT:    mov z5.b, z0.b[19]
+; VBITS_GE_512-NEXT:    mov z6.b, z0.b[19]
 ; VBITS_GE_512-NEXT:    and x22, x22, #0x1
 ; VBITS_GE_512-NEXT:    umov w10, v0.b[4]
 ; VBITS_GE_512-NEXT:    umov w17, v0.b[10]
 ; VBITS_GE_512-NEXT:    bfi x22, x11, #1, #1
-; VBITS_GE_512-NEXT:    mov z6.b, z0.b[20]
+; VBITS_GE_512-NEXT:    mov z7.b, z0.b[20]
 ; VBITS_GE_512-NEXT:    umov w3, v0.b[11]
 ; VBITS_GE_512-NEXT:    mov z4.b, z0.b[21]
 ; VBITS_GE_512-NEXT:    umov w9, v0.b[5]
-; VBITS_GE_512-NEXT:    mov z7.b, z0.b[22]
+; VBITS_GE_512-NEXT:    mov z5.b, z0.b[22]
 ; VBITS_GE_512-NEXT:    bfi x22, x12, #2, #1
 ; VBITS_GE_512-NEXT:    fmov w19, s3
-; VBITS_GE_512-NEXT:    fmov w20, s5
+; VBITS_GE_512-NEXT:    fmov w20, s6
 ; VBITS_GE_512-NEXT:    ubfiz x14, x14, #7, #1
 ; VBITS_GE_512-NEXT:    ubfiz x1, x1, #8, #1
 ; VBITS_GE_512-NEXT:    umov w4, v0.b[12]
 ; VBITS_GE_512-NEXT:    bfi x22, x13, #3, #1
 ; VBITS_GE_512-NEXT:    mov z16.b, z0.b[23]
-; VBITS_GE_512-NEXT:    fmov w21, s6
+; VBITS_GE_512-NEXT:    fmov w21, s7
 ; VBITS_GE_512-NEXT:    ubfiz x16, x16, #9, #1
 ; VBITS_GE_512-NEXT:    umov w8, v0.b[6]
 ; VBITS_GE_512-NEXT:    umov w5, v0.b[13]
@@ -3276,7 +3276,7 @@ define void @masked_load_v64i8(ptr %ap, ptr %bp, ptr %c) #0 {
 ; VBITS_GE_512-NEXT:    bfi x22, x10, #4, #1
 ; VBITS_GE_512-NEXT:    ubfiz x10, x17, #10, #1
 ; VBITS_GE_512-NEXT:    mov z18.b, z0.b[25]
-; VBITS_GE_512-NEXT:    fmov w24, s7
+; VBITS_GE_512-NEXT:    fmov w24, s5
 ; VBITS_GE_512-NEXT:    ubfiz x13, x19, #18, #1
 ; VBITS_GE_512-NEXT:    ubfiz x19, x20, #19, #1
 ; VBITS_GE_512-NEXT:    orr x14, x14, x16
@@ -3307,7 +3307,7 @@ define void @masked_load_v64i8(ptr %ap, ptr %bp, ptr %c) #0 {
 ; VBITS_GE_512-NEXT:    orr x9, x10, x9
 ; VBITS_GE_512-NEXT:    orr x10, x13, x16
 ; VBITS_GE_512-NEXT:    ubfiz x13, x25, #23, #1
-; VBITS_GE_512-NEXT:    mov z5.b, z0.b[30]
+; VBITS_GE_512-NEXT:    mov z6.b, z0.b[30]
 ; VBITS_GE_512-NEXT:    fmov w28, s20
 ; VBITS_GE_512-NEXT:    orr x9, x9, x14
 ; VBITS_GE_512-NEXT:    orr x8, x10, x8
@@ -3323,10 +3323,10 @@ define void @masked_load_v64i8(ptr %ap, ptr %bp, ptr %c) #0 {
 ; VBITS_GE_512-NEXT:    orr x9, x9, x10
 ; VBITS_GE_512-NEXT:    orr x8, x8, x14
 ; VBITS_GE_512-NEXT:    ubfiz x10, x27, #26, #1
-; VBITS_GE_512-NEXT:    fmov w12, s5
+; VBITS_GE_512-NEXT:    fmov w12, s6
 ; VBITS_GE_512-NEXT:    orr x8, x8, x11
 ; VBITS_GE_512-NEXT:    ubfiz x11, x28, #27, #1
-; VBITS_GE_512-NEXT:    mov z3.b, z0.b[31]
+; VBITS_GE_512-NEXT:    mov z2.b, z0.b[31]
 ; VBITS_GE_512-NEXT:    orr x9, x9, x13
 ; VBITS_GE_512-NEXT:    orr x8, x8, x10
 ; VBITS_GE_512-NEXT:    ubfiz x10, x6, #16, #1
@@ -3334,20 +3334,20 @@ define void @masked_load_v64i8(ptr %ap, ptr %bp, ptr %c) #0 {
 ; VBITS_GE_512-NEXT:    orr x8, x8, x11
 ; VBITS_GE_512-NEXT:    ubfiz x11, x7, #17, #1
 ; VBITS_GE_512-NEXT:    ubfiz x14, x30, #29, #1
-; VBITS_GE_512-NEXT:    mov z2.b, z0.b[32]
+; VBITS_GE_512-NEXT:    mov z3.b, z0.b[32]
 ; VBITS_GE_512-NEXT:    orr x9, x9, x10
 ; VBITS_GE_512-NEXT:    orr x8, x8, x13
 ; VBITS_GE_512-NEXT:    ubfiz x10, x12, #30, #1
-; VBITS_GE_512-NEXT:    fmov w12, s3
+; VBITS_GE_512-NEXT:    fmov w12, s2
 ; VBITS_GE_512-NEXT:    orr x9, x9, x11
 ; VBITS_GE_512-NEXT:    orr x8, x8, x14
 ; VBITS_GE_512-NEXT:    mov z1.b, z0.b[33]
 ; VBITS_GE_512-NEXT:    orr x9, x22, x9
 ; VBITS_GE_512-NEXT:    orr x8, x8, x10
-; VBITS_GE_512-NEXT:    orr x8, x9, x8
-; VBITS_GE_512-NEXT:    fmov w9, s2
-; VBITS_GE_512-NEXT:    lsl w10, w12, #31
 ; VBITS_GE_512-NEXT:    mov z2.b, z0.b[34]
+; VBITS_GE_512-NEXT:    orr x8, x9, x8
+; VBITS_GE_512-NEXT:    fmov w9, s3
+; VBITS_GE_512-NEXT:    lsl w10, w12, #31
 ; VBITS_GE_512-NEXT:    orr x8, x8, x10
 ; VBITS_GE_512-NEXT:    and w9, w9, #0x1
 ; VBITS_GE_512-NEXT:    orr x8, x8, x9, lsl #32
@@ -15276,8 +15276,8 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p5/m, w10
 ; CHECK-NEXT:  .LBB37_22: // %else58
 ; CHECK-NEXT:    lastb w10, p3, z1.b
-; CHECK-NEXT:    mov w1, #75 // =0x4b
-; CHECK-NEXT:    mov w17, #87 // =0x57
+; CHECK-NEXT:    mov w17, #75 // =0x4b
+; CHECK-NEXT:    mov w1, #87 // =0x57
 ; CHECK-NEXT:    lastb w12, p4, z1.b
 ; CHECK-NEXT:    lastb w15, p1, z1.b
 ; CHECK-NEXT:    lastb w16, p2, z1.b
@@ -15293,8 +15293,8 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p3/m, w11
 ; CHECK-NEXT:  .LBB37_24: // %else62
 ; CHECK-NEXT:    lastb w11, p2, z1.b
-; CHECK-NEXT:    mov w3, #76 // =0x4c
-; CHECK-NEXT:    mov w18, #88 // =0x58
+; CHECK-NEXT:    mov w18, #76 // =0x4c
+; CHECK-NEXT:    mov w3, #88 // =0x58
 ; CHECK-NEXT:    lastb w13, p1, z1.b
 ; CHECK-NEXT:    whilels p2.b, xzr, x9
 ; CHECK-NEXT:    whilels p1.b, xzr, x14
@@ -15312,12 +15312,12 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x7, x12, #8, #1
 ; CHECK-NEXT:    ubfiz x4, x15, #19, #1
 ; CHECK-NEXT:    ubfiz x6, x16, #20, #1
-; CHECK-NEXT:    mov w15, #89 // =0x59
+; CHECK-NEXT:    mov w15, #77 // =0x4d
 ; CHECK-NEXT:    lastb w14, p1, z1.b
-; CHECK-NEXT:    whilels p2.b, xzr, x1
-; CHECK-NEXT:    mov w1, #77 // =0x4d
-; CHECK-NEXT:    whilels p1.b, xzr, x17
+; CHECK-NEXT:    whilels p2.b, xzr, x17
 ; CHECK-NEXT:    mov w17, #64 // =0x40
+; CHECK-NEXT:    whilels p1.b, xzr, x1
+; CHECK-NEXT:    mov w1, #89 // =0x59
 ; CHECK-NEXT:    tbz w8, #18, .LBB37_28
 ; CHECK-NEXT:  // %bb.27: // %cond.load69
 ; CHECK-NEXT:    mov w10, #18 // =0x12
@@ -15340,15 +15340,15 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    .cfi_offset w24, -48
 ; CHECK-NEXT:    lastb w10, p2, z1.b
 ; CHECK-NEXT:    orr x7, x5, x7
+; CHECK-NEXT:    ubfiz x20, x11, #9, #1
 ; CHECK-NEXT:    ubfiz x5, x13, #21, #1
 ; CHECK-NEXT:    mov w16, #65 // =0x41
 ; CHECK-NEXT:    orr x19, x4, x6
-; CHECK-NEXT:    mov w4, #90 // =0x5a
 ; CHECK-NEXT:    lastb w12, p1, z1.b
-; CHECK-NEXT:    whilels p2.b, xzr, x3
-; CHECK-NEXT:    ubfiz x3, x11, #9, #1
-; CHECK-NEXT:    whilels p1.b, xzr, x18
+; CHECK-NEXT:    mov w4, #90 // =0x5a
+; CHECK-NEXT:    whilels p2.b, xzr, x18
 ; CHECK-NEXT:    mov w18, #78 // =0x4e
+; CHECK-NEXT:    whilels p1.b, xzr, x3
 ; CHECK-NEXT:    tbz w8, #19, .LBB37_30
 ; CHECK-NEXT:  // %bb.29: // %cond.load73
 ; CHECK-NEXT:    mov w11, #19 // =0x13
@@ -15361,15 +15361,15 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    lastb w11, p2, z1.b
 ; CHECK-NEXT:    ubfiz x21, x9, #10, #1
 ; CHECK-NEXT:    ubfiz x6, x14, #22, #1
-; CHECK-NEXT:    orr x7, x7, x3
+; CHECK-NEXT:    orr x7, x7, x20
 ; CHECK-NEXT:    mov w3, #79 // =0x4f
 ; CHECK-NEXT:    orr x20, x19, x5
 ; CHECK-NEXT:    lastb w13, p1, z1.b
 ; CHECK-NEXT:    mov w5, #91 // =0x5b
 ; CHECK-NEXT:    whilels p3.b, xzr, x17
 ; CHECK-NEXT:    mov w17, #66 // =0x42
-; CHECK-NEXT:    whilels p2.b, xzr, x1
-; CHECK-NEXT:    whilels p1.b, xzr, x15
+; CHECK-NEXT:    whilels p2.b, xzr, x15
+; CHECK-NEXT:    whilels p1.b, xzr, x1
 ; CHECK-NEXT:    tbz w8, #20, .LBB37_32
 ; CHECK-NEXT:  // %bb.31: // %cond.load77
 ; CHECK-NEXT:    mov w9, #20 // =0x14
@@ -15434,10 +15434,10 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov w19, #94 // =0x5e
 ; CHECK-NEXT:    lastb w17, p1, z1.b
 ; CHECK-NEXT:    whilels p3.b, xzr, x1
+; CHECK-NEXT:    mov w1, #82 // =0x52
 ; CHECK-NEXT:    whilels p2.b, xzr, x4
-; CHECK-NEXT:    mov w4, #82 // =0x52
+; CHECK-NEXT:    mov w4, #95 // =0x5f
 ; CHECK-NEXT:    whilels p1.b, xzr, x6
-; CHECK-NEXT:    mov w6, #95 // =0x5f
 ; CHECK-NEXT:    tbz w8, #23, .LBB37_38
 ; CHECK-NEXT:  // %bb.37: // %cond.load89
 ; CHECK-NEXT:    mov w14, #23 // =0x17
@@ -15450,40 +15450,36 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    lastb w14, p3, z1.b
 ; CHECK-NEXT:    bfi x9, x10, #1, #1
 ; CHECK-NEXT:    ubfiz x23, x16, #26, #1
+; CHECK-NEXT:    mov w10, #70 // =0x46
 ; CHECK-NEXT:    lastb w15, p2, z1.b
-; CHECK-NEXT:    lastb w1, p1, z1.b
+; CHECK-NEXT:    lastb w6, p1, z1.b
 ; CHECK-NEXT:    whilels p3.b, xzr, x18
 ; CHECK-NEXT:    whilels p2.b, xzr, x5
 ; CHECK-NEXT:    ubfiz x5, x12, #14, #1
-; CHECK-NEXT:    mov w12, #70 // =0x46
 ; CHECK-NEXT:    whilels p1.b, xzr, x7
 ; CHECK-NEXT:    orr x7, x20, x21
 ; CHECK-NEXT:    orr x20, x24, x22
 ; CHECK-NEXT:    tbz w8, #24, .LBB37_40
 ; CHECK-NEXT:  // %bb.39: // %cond.load93
-; CHECK-NEXT:    mov w10, #24 // =0x18
+; CHECK-NEXT:    mov w12, #24 // =0x18
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w10
-; CHECK-NEXT:    ldrb w10, [x0], #1
+; CHECK-NEXT:    mov z3.b, w12
+; CHECK-NEXT:    ldrb w12, [x0], #1
 ; CHECK-NEXT:    cmpeq p4.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p4/m, w10
+; CHECK-NEXT:    mov z0.b, p4/m, w12
 ; CHECK-NEXT:  .LBB37_40: // %else94
-; CHECK-NEXT:    lastb w10, p3, z1.b
-; CHECK-NEXT:    ldp x22, x21, [sp, #32] // 16-byte Folded Reload
+; CHECK-NEXT:    lastb w12, p3, z1.b
 ; CHECK-NEXT:    bfi x9, x11, #2, #1
-; CHECK-NEXT:    orr x5, x7, x5
+; CHECK-NEXT:    ubfiz x13, x13, #15, #1
 ; CHECK-NEXT:    lastb w16, p2, z1.b
 ; CHECK-NEXT:    lastb w18, p1, z1.b
-; CHECK-NEXT:    whilels p1.b, xzr, x19
-; CHECK-NEXT:    whilels p3.b, xzr, x6
-; CHECK-NEXT:    orr x6, x20, x23
-; CHECK-NEXT:    ldp x20, x19, [sp, #48] // 16-byte Folded Reload
 ; CHECK-NEXT:    whilels p4.b, xzr, x3
-; CHECK-NEXT:    ldp x24, x23, [sp, #16] // 16-byte Folded Reload
-; CHECK-NEXT:    whilels p2.b, xzr, x4
-; CHECK-NEXT:    ubfiz x3, x13, #15, #1
-; CHECK-NEXT:    ubfiz x4, x17, #27, #1
-; CHECK-NEXT:    add sp, sp, #64
+; CHECK-NEXT:    ubfiz x3, x17, #27, #1
+; CHECK-NEXT:    whilels p2.b, xzr, x1
+; CHECK-NEXT:    whilels p1.b, xzr, x19
+; CHECK-NEXT:    whilels p3.b, xzr, x4
+; CHECK-NEXT:    orr x4, x7, x5
+; CHECK-NEXT:    orr x5, x20, x23
 ; CHECK-NEXT:    tbz w8, #25, .LBB37_42
 ; CHECK-NEXT:  // %bb.41: // %cond.load97
 ; CHECK-NEXT:    mov w11, #25 // =0x19
@@ -15495,47 +15491,51 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:  .LBB37_42: // %else98
 ; CHECK-NEXT:    lastb w11, p4, z1.b
 ; CHECK-NEXT:    bfi x9, x14, #3, #1
-; CHECK-NEXT:    ubfiz x15, x15, #16, #1
-; CHECK-NEXT:    ubfiz x1, x1, #28, #1
+; CHECK-NEXT:    ubfiz x19, x15, #16, #1
+; CHECK-NEXT:    ubfiz x6, x6, #28, #1
+; CHECK-NEXT:    orr x4, x4, x13
 ; CHECK-NEXT:    orr x3, x5, x3
-; CHECK-NEXT:    orr x4, x6, x4
-; CHECK-NEXT:    lastb w13, p2, z1.b
+; CHECK-NEXT:    lastb w17, p2, z1.b
 ; CHECK-NEXT:    mov w14, #96 // =0x60
-; CHECK-NEXT:    lastb w17, p1, z1.b
+; CHECK-NEXT:    lastb w1, p1, z1.b
 ; CHECK-NEXT:    lastb w7, p3, z1.b
-; CHECK-NEXT:    whilels p1.b, xzr, x12
+; CHECK-NEXT:    whilels p1.b, xzr, x10
 ; CHECK-NEXT:    tbz w8, #26, .LBB37_44
 ; CHECK-NEXT:  // %bb.43: // %cond.load101
-; CHECK-NEXT:    mov w12, #26 // =0x1a
+; CHECK-NEXT:    mov w10, #26 // =0x1a
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w12
-; CHECK-NEXT:    ldrb w12, [x0], #1
+; CHECK-NEXT:    mov z3.b, w10
+; CHECK-NEXT:    ldrb w10, [x0], #1
 ; CHECK-NEXT:    cmpeq p2.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p2/m, w12
+; CHECK-NEXT:    mov z0.b, p2/m, w10
 ; CHECK-NEXT:  .LBB37_44: // %else102
-; CHECK-NEXT:    lastb w12, p1, z1.b
-; CHECK-NEXT:    bfi x9, x10, #4, #1
-; CHECK-NEXT:    ubfiz x16, x16, #17, #1
+; CHECK-NEXT:    lastb w13, p1, z1.b
+; CHECK-NEXT:    orr x4, x4, x19
+; CHECK-NEXT:    bfi x9, x12, #4, #1
+; CHECK-NEXT:    ldp x20, x19, [sp, #48] // 16-byte Folded Reload
+; CHECK-NEXT:    ubfiz x15, x16, #17, #1
+; CHECK-NEXT:    ldp x22, x21, [sp, #32] // 16-byte Folded Reload
 ; CHECK-NEXT:    ubfiz x18, x18, #29, #1
+; CHECK-NEXT:    ldp x24, x23, [sp, #16] // 16-byte Folded Reload
 ; CHECK-NEXT:    lsl w10, w7, #31
-; CHECK-NEXT:    orr x3, x3, x15
-; CHECK-NEXT:    orr x1, x4, x1
-; CHECK-NEXT:    mov w15, #97 // =0x61
+; CHECK-NEXT:    orr x3, x3, x6
+; CHECK-NEXT:    mov w12, #97 // =0x61
+; CHECK-NEXT:    add sp, sp, #64
 ; CHECK-NEXT:    tbz w8, #27, .LBB37_46
 ; CHECK-NEXT:  // %bb.45: // %cond.load105
-; CHECK-NEXT:    mov w4, #27 // =0x1b
+; CHECK-NEXT:    mov w16, #27 // =0x1b
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w4
-; CHECK-NEXT:    ldrb w4, [x0], #1
+; CHECK-NEXT:    mov z3.b, w16
+; CHECK-NEXT:    ldrb w16, [x0], #1
 ; CHECK-NEXT:    cmpeq p1.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p1/m, w4
+; CHECK-NEXT:    mov z0.b, p1/m, w16
 ; CHECK-NEXT:  .LBB37_46: // %else106
 ; CHECK-NEXT:    bfi x9, x11, #5, #1
-; CHECK-NEXT:    ubfiz x13, x13, #18, #1
-; CHECK-NEXT:    ubfiz x17, x17, #30, #1
+; CHECK-NEXT:    ubfiz x16, x17, #18, #1
+; CHECK-NEXT:    ubfiz x17, x1, #30, #1
 ; CHECK-NEXT:    whilels p1.b, xzr, x14
-; CHECK-NEXT:    orr x16, x3, x16
-; CHECK-NEXT:    orr x18, x1, x18
+; CHECK-NEXT:    orr x15, x4, x15
+; CHECK-NEXT:    orr x18, x3, x18
 ; CHECK-NEXT:    mov w11, #98 // =0x62
 ; CHECK-NEXT:    tbz w8, #28, .LBB37_48
 ; CHECK-NEXT:  // %bb.47: // %cond.load109
@@ -15547,11 +15547,11 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p2/m, w14
 ; CHECK-NEXT:  .LBB37_48: // %else110
 ; CHECK-NEXT:    lastb w14, p1, z1.b
-; CHECK-NEXT:    bfi x9, x12, #6, #1
-; CHECK-NEXT:    mov w12, #99 // =0x63
-; CHECK-NEXT:    whilels p1.b, xzr, x15
-; CHECK-NEXT:    orr x15, x16, x13
+; CHECK-NEXT:    bfi x9, x13, #6, #1
+; CHECK-NEXT:    orr x15, x15, x16
 ; CHECK-NEXT:    orr x16, x18, x17
+; CHECK-NEXT:    whilels p1.b, xzr, x12
+; CHECK-NEXT:    mov w12, #99 // =0x63
 ; CHECK-NEXT:    tbz w8, #29, .LBB37_50
 ; CHECK-NEXT:  // %bb.49: // %cond.load113
 ; CHECK-NEXT:    mov w13, #29 // =0x1d
@@ -15954,21 +15954,21 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p2/m, w12
 ; CHECK-NEXT:  .LBB37_106: // %else226
 ; CHECK-NEXT:    lastb w12, p1, z1.b
-; CHECK-NEXT:    orr x13, x15, x9, lsl #58
+; CHECK-NEXT:    orr x15, x15, x9, lsl #58
 ; CHECK-NEXT:    mov w9, #127 // =0x7f
 ; CHECK-NEXT:    whilels p1.b, xzr, x11
 ; CHECK-NEXT:    and w11, w14, #0x1
 ; CHECK-NEXT:    tbz x8, #58, .LBB37_108
 ; CHECK-NEXT:  // %bb.107: // %cond.load229
-; CHECK-NEXT:    mov w14, #58 // =0x3a
+; CHECK-NEXT:    mov w13, #58 // =0x3a
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w14
-; CHECK-NEXT:    ldrb w14, [x0], #1
+; CHECK-NEXT:    mov z3.b, w13
+; CHECK-NEXT:    ldrb w13, [x0], #1
 ; CHECK-NEXT:    cmpeq p2.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p2/m, w14
+; CHECK-NEXT:    mov z0.b, p2/m, w13
 ; CHECK-NEXT:  .LBB37_108: // %else230
-; CHECK-NEXT:    lastb w14, p1, z1.b
-; CHECK-NEXT:    orr x13, x13, x10, lsl #59
+; CHECK-NEXT:    lastb w13, p1, z1.b
+; CHECK-NEXT:    orr x14, x15, x10, lsl #59
 ; CHECK-NEXT:    and w10, w12, #0x1
 ; CHECK-NEXT:    tbz x8, #59, .LBB37_110
 ; CHECK-NEXT:  // %bb.109: // %cond.load233
@@ -15979,9 +15979,9 @@ define void @masked_load_sext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    cmpeq p1.b, p0/z, z2.b, z3.b
 ; CHECK-NEXT:    mov z0.b, p1/m, w12
 ; CHECK-NEXT:  .LBB37_110: // %else234
-; CHECK-NEXT:    orr x12, x13, x11, lsl #60
+; CHECK-NEXT:    orr x12, x14, x11, lsl #60
 ; CHECK-NEXT:    whilels p1.b, xzr, x9
-; CHECK-NEXT:    and w9, w14, #0x1
+; CHECK-NEXT:    and w9, w13, #0x1
 ; CHECK-NEXT:    tbz x8, #60, .LBB37_112
 ; CHECK-NEXT:  // %bb.111: // %cond.load237
 ; CHECK-NEXT:    mov w11, #60 // =0x3c
@@ -16808,25 +16808,25 @@ define void @masked_load_sext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    umov w1, v0.b[8]
 ; CHECK-NEXT:    umov w16, v0.b[9]
 ; CHECK-NEXT:    mov z3.b, z0.b[18]
-; CHECK-NEXT:    mov z5.b, z0.b[19]
+; CHECK-NEXT:    mov z6.b, z0.b[19]
 ; CHECK-NEXT:    and x22, x22, #0x1
 ; CHECK-NEXT:    umov w10, v0.b[4]
 ; CHECK-NEXT:    umov w17, v0.b[10]
 ; CHECK-NEXT:    bfi x22, x11, #1, #1
-; CHECK-NEXT:    mov z6.b, z0.b[20]
+; CHECK-NEXT:    mov z7.b, z0.b[20]
 ; CHECK-NEXT:    umov w3, v0.b[11]
 ; CHECK-NEXT:    mov z4.b, z0.b[21]
 ; CHECK-NEXT:    umov w9, v0.b[5]
-; CHECK-NEXT:    mov z7.b, z0.b[22]
+; CHECK-NEXT:    mov z5.b, z0.b[22]
 ; CHECK-NEXT:    bfi x22, x12, #2, #1
 ; CHECK-NEXT:    fmov w19, s3
-; CHECK-NEXT:    fmov w20, s5
+; CHECK-NEXT:    fmov w20, s6
 ; CHECK-NEXT:    ubfiz x14, x14, #7, #1
 ; CHECK-NEXT:    ubfiz x1, x1, #8, #1
 ; CHECK-NEXT:    umov w4, v0.b[12]
 ; CHECK-NEXT:    bfi x22, x13, #3, #1
 ; CHECK-NEXT:    mov z16.b, z0.b[23]
-; CHECK-NEXT:    fmov w21, s6
+; CHECK-NEXT:    fmov w21, s7
 ; CHECK-NEXT:    ubfiz x16, x16, #9, #1
 ; CHECK-NEXT:    umov w8, v0.b[6]
 ; CHECK-NEXT:    umov w5, v0.b[13]
@@ -16836,7 +16836,7 @@ define void @masked_load_sext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    bfi x22, x10, #4, #1
 ; CHECK-NEXT:    ubfiz x10, x17, #10, #1
 ; CHECK-NEXT:    mov z18.b, z0.b[25]
-; CHECK-NEXT:    fmov w24, s7
+; CHECK-NEXT:    fmov w24, s5
 ; CHECK-NEXT:    ubfiz x13, x19, #18, #1
 ; CHECK-NEXT:    ubfiz x19, x20, #19, #1
 ; CHECK-NEXT:    orr x14, x14, x16
@@ -16867,7 +16867,7 @@ define void @masked_load_sext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    orr x9, x10, x9
 ; CHECK-NEXT:    orr x10, x13, x16
 ; CHECK-NEXT:    ubfiz x13, x25, #23, #1
-; CHECK-NEXT:    mov z5.b, z0.b[30]
+; CHECK-NEXT:    mov z6.b, z0.b[30]
 ; CHECK-NEXT:    fmov w28, s20
 ; CHECK-NEXT:    orr x9, x9, x14
 ; CHECK-NEXT:    orr x8, x10, x8
@@ -16883,10 +16883,10 @@ define void @masked_load_sext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    orr x9, x9, x10
 ; CHECK-NEXT:    orr x8, x8, x14
 ; CHECK-NEXT:    ubfiz x10, x27, #26, #1
-; CHECK-NEXT:    fmov w12, s5
+; CHECK-NEXT:    fmov w12, s6
 ; CHECK-NEXT:    orr x8, x8, x11
 ; CHECK-NEXT:    ubfiz x11, x28, #27, #1
-; CHECK-NEXT:    mov z3.b, z0.b[31]
+; CHECK-NEXT:    mov z2.b, z0.b[31]
 ; CHECK-NEXT:    orr x9, x9, x13
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    ubfiz x10, x6, #16, #1
@@ -16894,20 +16894,20 @@ define void @masked_load_sext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    orr x8, x8, x11
 ; CHECK-NEXT:    ubfiz x11, x7, #17, #1
 ; CHECK-NEXT:    ubfiz x14, x30, #29, #1
-; CHECK-NEXT:    mov z2.b, z0.b[32]
+; CHECK-NEXT:    mov z3.b, z0.b[32]
 ; CHECK-NEXT:    orr x9, x9, x10
 ; CHECK-NEXT:    orr x8, x8, x13
 ; CHECK-NEXT:    ubfiz x10, x12, #30, #1
-; CHECK-NEXT:    fmov w12, s3
+; CHECK-NEXT:    fmov w12, s2
 ; CHECK-NEXT:    orr x9, x9, x11
 ; CHECK-NEXT:    orr x8, x8, x14
 ; CHECK-NEXT:    mov z1.b, z0.b[33]
 ; CHECK-NEXT:    orr x9, x22, x9
 ; CHECK-NEXT:    orr x8, x8, x10
-; CHECK-NEXT:    orr x8, x9, x8
-; CHECK-NEXT:    fmov w9, s2
-; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    mov z2.b, z0.b[34]
+; CHECK-NEXT:    orr x8, x9, x8
+; CHECK-NEXT:    fmov w9, s3
+; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    and w9, w9, #0x1
 ; CHECK-NEXT:    orr x8, x8, x9, lsl #32
@@ -18218,8 +18218,8 @@ define void @masked_load_sext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    uzp1 z0.b, z0.b, z0.b
 ; CHECK-NEXT:    umov w12, v0.b[1]
 ; CHECK-NEXT:    fmov w22, s0
-; CHECK-NEXT:    mov z6.b, z0.b[18]
-; CHECK-NEXT:    mov z2.b, z0.b[19]
+; CHECK-NEXT:    mov z7.b, z0.b[18]
+; CHECK-NEXT:    mov z3.b, z0.b[19]
 ; CHECK-NEXT:    umov w13, v0.b[2]
 ; CHECK-NEXT:    umov w14, v0.b[7]
 ; CHECK-NEXT:    umov w3, v0.b[8]
@@ -18229,9 +18229,9 @@ define void @masked_load_sext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    and x22, x22, #0x1
 ; CHECK-NEXT:    umov w11, v0.b[3]
 ; CHECK-NEXT:    umov w5, v0.b[10]
-; CHECK-NEXT:    mov z7.b, z0.b[22]
-; CHECK-NEXT:    fmov w19, s6
-; CHECK-NEXT:    fmov w20, s2
+; CHECK-NEXT:    mov z5.b, z0.b[22]
+; CHECK-NEXT:    fmov w19, s7
+; CHECK-NEXT:    fmov w20, s3
 ; CHECK-NEXT:    bfi x22, x12, #1, #1
 ; CHECK-NEXT:    mov z16.b, z0.b[23]
 ; CHECK-NEXT:    fmov w21, s1
@@ -18243,7 +18243,7 @@ define void @masked_load_sext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x3, x3, #8, #1
 ; CHECK-NEXT:    umov w17, v0.b[12]
 ; CHECK-NEXT:    mov z17.b, z0.b[24]
-; CHECK-NEXT:    fmov w24, s7
+; CHECK-NEXT:    fmov w24, s5
 ; CHECK-NEXT:    ubfiz x4, x4, #9, #1
 ; CHECK-NEXT:    ubfiz x19, x19, #18, #1
 ; CHECK-NEXT:    ubfiz x20, x20, #19, #1
@@ -18262,7 +18262,7 @@ define void @masked_load_sext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x4, x23, #21, #1
 ; CHECK-NEXT:    umov w8, v0.b[6]
 ; CHECK-NEXT:    umov w1, v0.b[15]
-; CHECK-NEXT:    mov z5.b, z0.b[17]
+; CHECK-NEXT:    mov z6.b, z0.b[17]
 ; CHECK-NEXT:    mov z20.b, z0.b[27]
 ; CHECK-NEXT:    fmov w26, s17
 ; CHECK-NEXT:    orr x11, x14, x3
@@ -18270,7 +18270,7 @@ define void @masked_load_sext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x15, x15, #11, #1
 ; CHECK-NEXT:    ubfiz x3, x24, #22, #1
 ; CHECK-NEXT:    bfi x22, x10, #4, #1
-; CHECK-NEXT:    mov z3.b, z0.b[16]
+; CHECK-NEXT:    mov z2.b, z0.b[16]
 ; CHECK-NEXT:    mov z21.b, z0.b[28]
 ; CHECK-NEXT:    fmov w12, s18
 ; CHECK-NEXT:    orr x14, x14, x4
@@ -18282,14 +18282,14 @@ define void @masked_load_sext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    orr x14, x14, x3
 ; CHECK-NEXT:    ubfiz x15, x18, #13, #1
 ; CHECK-NEXT:    bfi x22, x9, #5, #1
-; CHECK-NEXT:    fmov w7, s5
-; CHECK-NEXT:    mov z5.b, z0.b[30]
+; CHECK-NEXT:    fmov w7, s6
+; CHECK-NEXT:    mov z6.b, z0.b[30]
 ; CHECK-NEXT:    fmov w28, s20
 ; CHECK-NEXT:    orr x10, x11, x10
 ; CHECK-NEXT:    orr x9, x14, x17
 ; CHECK-NEXT:    ubfiz x11, x16, #14, #1
 ; CHECK-NEXT:    ubfiz x14, x26, #24, #1
-; CHECK-NEXT:    fmov w6, s3
+; CHECK-NEXT:    fmov w6, s2
 ; CHECK-NEXT:    fmov w29, s21
 ; CHECK-NEXT:    orr x10, x10, x15
 ; CHECK-NEXT:    bfi x22, x8, #6, #1
@@ -18299,31 +18299,31 @@ define void @masked_load_sext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    orr x10, x10, x11
 ; CHECK-NEXT:    orr x9, x9, x14
 ; CHECK-NEXT:    ubfiz x11, x27, #26, #1
-; CHECK-NEXT:    fmov w13, s5
+; CHECK-NEXT:    fmov w13, s6
 ; CHECK-NEXT:    orr x8, x10, x8
 ; CHECK-NEXT:    orr x9, x9, x12
 ; CHECK-NEXT:    ubfiz x10, x28, #27, #1
-; CHECK-NEXT:    mov z3.b, z0.b[31]
+; CHECK-NEXT:    mov z2.b, z0.b[31]
 ; CHECK-NEXT:    orr x9, x9, x11
 ; CHECK-NEXT:    ubfiz x11, x6, #16, #1
 ; CHECK-NEXT:    ubfiz x12, x29, #28, #1
 ; CHECK-NEXT:    orr x9, x9, x10
 ; CHECK-NEXT:    ubfiz x10, x7, #17, #1
 ; CHECK-NEXT:    ubfiz x14, x30, #29, #1
-; CHECK-NEXT:    mov z2.b, z0.b[32]
+; CHECK-NEXT:    mov z3.b, z0.b[32]
 ; CHECK-NEXT:    orr x8, x8, x11
 ; CHECK-NEXT:    orr x9, x9, x12
 ; CHECK-NEXT:    ubfiz x11, x13, #30, #1
-; CHECK-NEXT:    fmov w12, s3
+; CHECK-NEXT:    fmov w12, s2
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    orr x9, x9, x14
 ; CHECK-NEXT:    mov z1.b, z0.b[33]
 ; CHECK-NEXT:    orr x8, x22, x8
 ; CHECK-NEXT:    orr x9, x9, x11
-; CHECK-NEXT:    orr x8, x8, x9
-; CHECK-NEXT:    fmov w9, s2
-; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    mov z2.b, z0.b[34]
+; CHECK-NEXT:    orr x8, x8, x9
+; CHECK-NEXT:    fmov w9, s3
+; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    and w9, w9, #0x1
 ; CHECK-NEXT:    orr x8, x8, x9, lsl #32
@@ -20414,8 +20414,8 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p5/m, w10
 ; CHECK-NEXT:  .LBB43_22: // %else58
 ; CHECK-NEXT:    lastb w10, p3, z1.b
-; CHECK-NEXT:    mov w1, #75 // =0x4b
-; CHECK-NEXT:    mov w17, #87 // =0x57
+; CHECK-NEXT:    mov w17, #75 // =0x4b
+; CHECK-NEXT:    mov w1, #87 // =0x57
 ; CHECK-NEXT:    lastb w12, p4, z1.b
 ; CHECK-NEXT:    lastb w15, p1, z1.b
 ; CHECK-NEXT:    lastb w16, p2, z1.b
@@ -20431,8 +20431,8 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p3/m, w11
 ; CHECK-NEXT:  .LBB43_24: // %else62
 ; CHECK-NEXT:    lastb w11, p2, z1.b
-; CHECK-NEXT:    mov w3, #76 // =0x4c
-; CHECK-NEXT:    mov w18, #88 // =0x58
+; CHECK-NEXT:    mov w18, #76 // =0x4c
+; CHECK-NEXT:    mov w3, #88 // =0x58
 ; CHECK-NEXT:    lastb w13, p1, z1.b
 ; CHECK-NEXT:    whilels p2.b, xzr, x9
 ; CHECK-NEXT:    whilels p1.b, xzr, x14
@@ -20450,12 +20450,12 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x7, x12, #8, #1
 ; CHECK-NEXT:    ubfiz x4, x15, #19, #1
 ; CHECK-NEXT:    ubfiz x6, x16, #20, #1
-; CHECK-NEXT:    mov w15, #89 // =0x59
+; CHECK-NEXT:    mov w15, #77 // =0x4d
 ; CHECK-NEXT:    lastb w14, p1, z1.b
-; CHECK-NEXT:    whilels p2.b, xzr, x1
-; CHECK-NEXT:    mov w1, #77 // =0x4d
-; CHECK-NEXT:    whilels p1.b, xzr, x17
+; CHECK-NEXT:    whilels p2.b, xzr, x17
 ; CHECK-NEXT:    mov w17, #64 // =0x40
+; CHECK-NEXT:    whilels p1.b, xzr, x1
+; CHECK-NEXT:    mov w1, #89 // =0x59
 ; CHECK-NEXT:    tbz w8, #18, .LBB43_28
 ; CHECK-NEXT:  // %bb.27: // %cond.load69
 ; CHECK-NEXT:    mov w10, #18 // =0x12
@@ -20478,15 +20478,15 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    .cfi_offset w24, -48
 ; CHECK-NEXT:    lastb w10, p2, z1.b
 ; CHECK-NEXT:    orr x7, x5, x7
+; CHECK-NEXT:    ubfiz x20, x11, #9, #1
 ; CHECK-NEXT:    ubfiz x5, x13, #21, #1
 ; CHECK-NEXT:    mov w16, #65 // =0x41
 ; CHECK-NEXT:    orr x19, x4, x6
-; CHECK-NEXT:    mov w4, #90 // =0x5a
 ; CHECK-NEXT:    lastb w12, p1, z1.b
-; CHECK-NEXT:    whilels p2.b, xzr, x3
-; CHECK-NEXT:    ubfiz x3, x11, #9, #1
-; CHECK-NEXT:    whilels p1.b, xzr, x18
+; CHECK-NEXT:    mov w4, #90 // =0x5a
+; CHECK-NEXT:    whilels p2.b, xzr, x18
 ; CHECK-NEXT:    mov w18, #78 // =0x4e
+; CHECK-NEXT:    whilels p1.b, xzr, x3
 ; CHECK-NEXT:    tbz w8, #19, .LBB43_30
 ; CHECK-NEXT:  // %bb.29: // %cond.load73
 ; CHECK-NEXT:    mov w11, #19 // =0x13
@@ -20499,15 +20499,15 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    lastb w11, p2, z1.b
 ; CHECK-NEXT:    ubfiz x21, x9, #10, #1
 ; CHECK-NEXT:    ubfiz x6, x14, #22, #1
-; CHECK-NEXT:    orr x7, x7, x3
+; CHECK-NEXT:    orr x7, x7, x20
 ; CHECK-NEXT:    mov w3, #79 // =0x4f
 ; CHECK-NEXT:    orr x20, x19, x5
 ; CHECK-NEXT:    lastb w13, p1, z1.b
 ; CHECK-NEXT:    mov w5, #91 // =0x5b
 ; CHECK-NEXT:    whilels p3.b, xzr, x17
 ; CHECK-NEXT:    mov w17, #66 // =0x42
-; CHECK-NEXT:    whilels p2.b, xzr, x1
-; CHECK-NEXT:    whilels p1.b, xzr, x15
+; CHECK-NEXT:    whilels p2.b, xzr, x15
+; CHECK-NEXT:    whilels p1.b, xzr, x1
 ; CHECK-NEXT:    tbz w8, #20, .LBB43_32
 ; CHECK-NEXT:  // %bb.31: // %cond.load77
 ; CHECK-NEXT:    mov w9, #20 // =0x14
@@ -20572,10 +20572,10 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov w19, #94 // =0x5e
 ; CHECK-NEXT:    lastb w17, p1, z1.b
 ; CHECK-NEXT:    whilels p3.b, xzr, x1
+; CHECK-NEXT:    mov w1, #82 // =0x52
 ; CHECK-NEXT:    whilels p2.b, xzr, x4
-; CHECK-NEXT:    mov w4, #82 // =0x52
+; CHECK-NEXT:    mov w4, #95 // =0x5f
 ; CHECK-NEXT:    whilels p1.b, xzr, x6
-; CHECK-NEXT:    mov w6, #95 // =0x5f
 ; CHECK-NEXT:    tbz w8, #23, .LBB43_38
 ; CHECK-NEXT:  // %bb.37: // %cond.load89
 ; CHECK-NEXT:    mov w14, #23 // =0x17
@@ -20588,40 +20588,36 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    lastb w14, p3, z1.b
 ; CHECK-NEXT:    bfi x9, x10, #1, #1
 ; CHECK-NEXT:    ubfiz x23, x16, #26, #1
+; CHECK-NEXT:    mov w10, #70 // =0x46
 ; CHECK-NEXT:    lastb w15, p2, z1.b
-; CHECK-NEXT:    lastb w1, p1, z1.b
+; CHECK-NEXT:    lastb w6, p1, z1.b
 ; CHECK-NEXT:    whilels p3.b, xzr, x18
 ; CHECK-NEXT:    whilels p2.b, xzr, x5
 ; CHECK-NEXT:    ubfiz x5, x12, #14, #1
-; CHECK-NEXT:    mov w12, #70 // =0x46
 ; CHECK-NEXT:    whilels p1.b, xzr, x7
 ; CHECK-NEXT:    orr x7, x20, x21
 ; CHECK-NEXT:    orr x20, x24, x22
 ; CHECK-NEXT:    tbz w8, #24, .LBB43_40
 ; CHECK-NEXT:  // %bb.39: // %cond.load93
-; CHECK-NEXT:    mov w10, #24 // =0x18
+; CHECK-NEXT:    mov w12, #24 // =0x18
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w10
-; CHECK-NEXT:    ldrb w10, [x0], #1
+; CHECK-NEXT:    mov z3.b, w12
+; CHECK-NEXT:    ldrb w12, [x0], #1
 ; CHECK-NEXT:    cmpeq p4.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p4/m, w10
+; CHECK-NEXT:    mov z0.b, p4/m, w12
 ; CHECK-NEXT:  .LBB43_40: // %else94
-; CHECK-NEXT:    lastb w10, p3, z1.b
-; CHECK-NEXT:    ldp x22, x21, [sp, #32] // 16-byte Folded Reload
+; CHECK-NEXT:    lastb w12, p3, z1.b
 ; CHECK-NEXT:    bfi x9, x11, #2, #1
-; CHECK-NEXT:    orr x5, x7, x5
+; CHECK-NEXT:    ubfiz x13, x13, #15, #1
 ; CHECK-NEXT:    lastb w16, p2, z1.b
 ; CHECK-NEXT:    lastb w18, p1, z1.b
-; CHECK-NEXT:    whilels p1.b, xzr, x19
-; CHECK-NEXT:    whilels p3.b, xzr, x6
-; CHECK-NEXT:    orr x6, x20, x23
-; CHECK-NEXT:    ldp x20, x19, [sp, #48] // 16-byte Folded Reload
 ; CHECK-NEXT:    whilels p4.b, xzr, x3
-; CHECK-NEXT:    ldp x24, x23, [sp, #16] // 16-byte Folded Reload
-; CHECK-NEXT:    whilels p2.b, xzr, x4
-; CHECK-NEXT:    ubfiz x3, x13, #15, #1
-; CHECK-NEXT:    ubfiz x4, x17, #27, #1
-; CHECK-NEXT:    add sp, sp, #64
+; CHECK-NEXT:    ubfiz x3, x17, #27, #1
+; CHECK-NEXT:    whilels p2.b, xzr, x1
+; CHECK-NEXT:    whilels p1.b, xzr, x19
+; CHECK-NEXT:    whilels p3.b, xzr, x4
+; CHECK-NEXT:    orr x4, x7, x5
+; CHECK-NEXT:    orr x5, x20, x23
 ; CHECK-NEXT:    tbz w8, #25, .LBB43_42
 ; CHECK-NEXT:  // %bb.41: // %cond.load97
 ; CHECK-NEXT:    mov w11, #25 // =0x19
@@ -20633,47 +20629,51 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:  .LBB43_42: // %else98
 ; CHECK-NEXT:    lastb w11, p4, z1.b
 ; CHECK-NEXT:    bfi x9, x14, #3, #1
-; CHECK-NEXT:    ubfiz x15, x15, #16, #1
-; CHECK-NEXT:    ubfiz x1, x1, #28, #1
+; CHECK-NEXT:    ubfiz x19, x15, #16, #1
+; CHECK-NEXT:    ubfiz x6, x6, #28, #1
+; CHECK-NEXT:    orr x4, x4, x13
 ; CHECK-NEXT:    orr x3, x5, x3
-; CHECK-NEXT:    orr x4, x6, x4
-; CHECK-NEXT:    lastb w13, p2, z1.b
+; CHECK-NEXT:    lastb w17, p2, z1.b
 ; CHECK-NEXT:    mov w14, #96 // =0x60
-; CHECK-NEXT:    lastb w17, p1, z1.b
+; CHECK-NEXT:    lastb w1, p1, z1.b
 ; CHECK-NEXT:    lastb w7, p3, z1.b
-; CHECK-NEXT:    whilels p1.b, xzr, x12
+; CHECK-NEXT:    whilels p1.b, xzr, x10
 ; CHECK-NEXT:    tbz w8, #26, .LBB43_44
 ; CHECK-NEXT:  // %bb.43: // %cond.load101
-; CHECK-NEXT:    mov w12, #26 // =0x1a
+; CHECK-NEXT:    mov w10, #26 // =0x1a
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w12
-; CHECK-NEXT:    ldrb w12, [x0], #1
+; CHECK-NEXT:    mov z3.b, w10
+; CHECK-NEXT:    ldrb w10, [x0], #1
 ; CHECK-NEXT:    cmpeq p2.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p2/m, w12
+; CHECK-NEXT:    mov z0.b, p2/m, w10
 ; CHECK-NEXT:  .LBB43_44: // %else102
-; CHECK-NEXT:    lastb w12, p1, z1.b
-; CHECK-NEXT:    bfi x9, x10, #4, #1
-; CHECK-NEXT:    ubfiz x16, x16, #17, #1
+; CHECK-NEXT:    lastb w13, p1, z1.b
+; CHECK-NEXT:    orr x4, x4, x19
+; CHECK-NEXT:    bfi x9, x12, #4, #1
+; CHECK-NEXT:    ldp x20, x19, [sp, #48] // 16-byte Folded Reload
+; CHECK-NEXT:    ubfiz x15, x16, #17, #1
+; CHECK-NEXT:    ldp x22, x21, [sp, #32] // 16-byte Folded Reload
 ; CHECK-NEXT:    ubfiz x18, x18, #29, #1
+; CHECK-NEXT:    ldp x24, x23, [sp, #16] // 16-byte Folded Reload
 ; CHECK-NEXT:    lsl w10, w7, #31
-; CHECK-NEXT:    orr x3, x3, x15
-; CHECK-NEXT:    orr x1, x4, x1
-; CHECK-NEXT:    mov w15, #97 // =0x61
+; CHECK-NEXT:    orr x3, x3, x6
+; CHECK-NEXT:    mov w12, #97 // =0x61
+; CHECK-NEXT:    add sp, sp, #64
 ; CHECK-NEXT:    tbz w8, #27, .LBB43_46
 ; CHECK-NEXT:  // %bb.45: // %cond.load105
-; CHECK-NEXT:    mov w4, #27 // =0x1b
+; CHECK-NEXT:    mov w16, #27 // =0x1b
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w4
-; CHECK-NEXT:    ldrb w4, [x0], #1
+; CHECK-NEXT:    mov z3.b, w16
+; CHECK-NEXT:    ldrb w16, [x0], #1
 ; CHECK-NEXT:    cmpeq p1.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p1/m, w4
+; CHECK-NEXT:    mov z0.b, p1/m, w16
 ; CHECK-NEXT:  .LBB43_46: // %else106
 ; CHECK-NEXT:    bfi x9, x11, #5, #1
-; CHECK-NEXT:    ubfiz x13, x13, #18, #1
-; CHECK-NEXT:    ubfiz x17, x17, #30, #1
+; CHECK-NEXT:    ubfiz x16, x17, #18, #1
+; CHECK-NEXT:    ubfiz x17, x1, #30, #1
 ; CHECK-NEXT:    whilels p1.b, xzr, x14
-; CHECK-NEXT:    orr x16, x3, x16
-; CHECK-NEXT:    orr x18, x1, x18
+; CHECK-NEXT:    orr x15, x4, x15
+; CHECK-NEXT:    orr x18, x3, x18
 ; CHECK-NEXT:    mov w11, #98 // =0x62
 ; CHECK-NEXT:    tbz w8, #28, .LBB43_48
 ; CHECK-NEXT:  // %bb.47: // %cond.load109
@@ -20685,11 +20685,11 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p2/m, w14
 ; CHECK-NEXT:  .LBB43_48: // %else110
 ; CHECK-NEXT:    lastb w14, p1, z1.b
-; CHECK-NEXT:    bfi x9, x12, #6, #1
-; CHECK-NEXT:    mov w12, #99 // =0x63
-; CHECK-NEXT:    whilels p1.b, xzr, x15
-; CHECK-NEXT:    orr x15, x16, x13
+; CHECK-NEXT:    bfi x9, x13, #6, #1
+; CHECK-NEXT:    orr x15, x15, x16
 ; CHECK-NEXT:    orr x16, x18, x17
+; CHECK-NEXT:    whilels p1.b, xzr, x12
+; CHECK-NEXT:    mov w12, #99 // =0x63
 ; CHECK-NEXT:    tbz w8, #29, .LBB43_50
 ; CHECK-NEXT:  // %bb.49: // %cond.load113
 ; CHECK-NEXT:    mov w13, #29 // =0x1d
@@ -21092,21 +21092,21 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    mov z0.b, p2/m, w12
 ; CHECK-NEXT:  .LBB43_106: // %else226
 ; CHECK-NEXT:    lastb w12, p1, z1.b
-; CHECK-NEXT:    orr x13, x15, x9, lsl #58
+; CHECK-NEXT:    orr x15, x15, x9, lsl #58
 ; CHECK-NEXT:    mov w9, #127 // =0x7f
 ; CHECK-NEXT:    whilels p1.b, xzr, x11
 ; CHECK-NEXT:    and w11, w14, #0x1
 ; CHECK-NEXT:    tbz x8, #58, .LBB43_108
 ; CHECK-NEXT:  // %bb.107: // %cond.load229
-; CHECK-NEXT:    mov w14, #58 // =0x3a
+; CHECK-NEXT:    mov w13, #58 // =0x3a
 ; CHECK-NEXT:    index z2.b, #0, #1
-; CHECK-NEXT:    mov z3.b, w14
-; CHECK-NEXT:    ldrb w14, [x0], #1
+; CHECK-NEXT:    mov z3.b, w13
+; CHECK-NEXT:    ldrb w13, [x0], #1
 ; CHECK-NEXT:    cmpeq p2.b, p0/z, z2.b, z3.b
-; CHECK-NEXT:    mov z0.b, p2/m, w14
+; CHECK-NEXT:    mov z0.b, p2/m, w13
 ; CHECK-NEXT:  .LBB43_108: // %else230
-; CHECK-NEXT:    lastb w14, p1, z1.b
-; CHECK-NEXT:    orr x13, x13, x10, lsl #59
+; CHECK-NEXT:    lastb w13, p1, z1.b
+; CHECK-NEXT:    orr x14, x15, x10, lsl #59
 ; CHECK-NEXT:    and w10, w12, #0x1
 ; CHECK-NEXT:    tbz x8, #59, .LBB43_110
 ; CHECK-NEXT:  // %bb.109: // %cond.load233
@@ -21117,9 +21117,9 @@ define void @masked_load_zext_v128i8i16(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    cmpeq p1.b, p0/z, z2.b, z3.b
 ; CHECK-NEXT:    mov z0.b, p1/m, w12
 ; CHECK-NEXT:  .LBB43_110: // %else234
-; CHECK-NEXT:    orr x12, x13, x11, lsl #60
+; CHECK-NEXT:    orr x12, x14, x11, lsl #60
 ; CHECK-NEXT:    whilels p1.b, xzr, x9
-; CHECK-NEXT:    and w9, w14, #0x1
+; CHECK-NEXT:    and w9, w13, #0x1
 ; CHECK-NEXT:    tbz x8, #60, .LBB43_112
 ; CHECK-NEXT:  // %bb.111: // %cond.load237
 ; CHECK-NEXT:    mov w11, #60 // =0x3c
@@ -21946,25 +21946,25 @@ define void @masked_load_zext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    umov w1, v0.b[8]
 ; CHECK-NEXT:    umov w16, v0.b[9]
 ; CHECK-NEXT:    mov z3.b, z0.b[18]
-; CHECK-NEXT:    mov z5.b, z0.b[19]
+; CHECK-NEXT:    mov z6.b, z0.b[19]
 ; CHECK-NEXT:    and x22, x22, #0x1
 ; CHECK-NEXT:    umov w10, v0.b[4]
 ; CHECK-NEXT:    umov w17, v0.b[10]
 ; CHECK-NEXT:    bfi x22, x11, #1, #1
-; CHECK-NEXT:    mov z6.b, z0.b[20]
+; CHECK-NEXT:    mov z7.b, z0.b[20]
 ; CHECK-NEXT:    umov w3, v0.b[11]
 ; CHECK-NEXT:    mov z4.b, z0.b[21]
 ; CHECK-NEXT:    umov w9, v0.b[5]
-; CHECK-NEXT:    mov z7.b, z0.b[22]
+; CHECK-NEXT:    mov z5.b, z0.b[22]
 ; CHECK-NEXT:    bfi x22, x12, #2, #1
 ; CHECK-NEXT:    fmov w19, s3
-; CHECK-NEXT:    fmov w20, s5
+; CHECK-NEXT:    fmov w20, s6
 ; CHECK-NEXT:    ubfiz x14, x14, #7, #1
 ; CHECK-NEXT:    ubfiz x1, x1, #8, #1
 ; CHECK-NEXT:    umov w4, v0.b[12]
 ; CHECK-NEXT:    bfi x22, x13, #3, #1
 ; CHECK-NEXT:    mov z16.b, z0.b[23]
-; CHECK-NEXT:    fmov w21, s6
+; CHECK-NEXT:    fmov w21, s7
 ; CHECK-NEXT:    ubfiz x16, x16, #9, #1
 ; CHECK-NEXT:    umov w8, v0.b[6]
 ; CHECK-NEXT:    umov w5, v0.b[13]
@@ -21974,7 +21974,7 @@ define void @masked_load_zext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    bfi x22, x10, #4, #1
 ; CHECK-NEXT:    ubfiz x10, x17, #10, #1
 ; CHECK-NEXT:    mov z18.b, z0.b[25]
-; CHECK-NEXT:    fmov w24, s7
+; CHECK-NEXT:    fmov w24, s5
 ; CHECK-NEXT:    ubfiz x13, x19, #18, #1
 ; CHECK-NEXT:    ubfiz x19, x20, #19, #1
 ; CHECK-NEXT:    orr x14, x14, x16
@@ -22005,7 +22005,7 @@ define void @masked_load_zext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    orr x9, x10, x9
 ; CHECK-NEXT:    orr x10, x13, x16
 ; CHECK-NEXT:    ubfiz x13, x25, #23, #1
-; CHECK-NEXT:    mov z5.b, z0.b[30]
+; CHECK-NEXT:    mov z6.b, z0.b[30]
 ; CHECK-NEXT:    fmov w28, s20
 ; CHECK-NEXT:    orr x9, x9, x14
 ; CHECK-NEXT:    orr x8, x10, x8
@@ -22021,10 +22021,10 @@ define void @masked_load_zext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    orr x9, x9, x10
 ; CHECK-NEXT:    orr x8, x8, x14
 ; CHECK-NEXT:    ubfiz x10, x27, #26, #1
-; CHECK-NEXT:    fmov w12, s5
+; CHECK-NEXT:    fmov w12, s6
 ; CHECK-NEXT:    orr x8, x8, x11
 ; CHECK-NEXT:    ubfiz x11, x28, #27, #1
-; CHECK-NEXT:    mov z3.b, z0.b[31]
+; CHECK-NEXT:    mov z2.b, z0.b[31]
 ; CHECK-NEXT:    orr x9, x9, x13
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    ubfiz x10, x6, #16, #1
@@ -22032,20 +22032,20 @@ define void @masked_load_zext_v64i8i32(ptr %ap, ptr %bp, ptr %c) vscale_range(16
 ; CHECK-NEXT:    orr x8, x8, x11
 ; CHECK-NEXT:    ubfiz x11, x7, #17, #1
 ; CHECK-NEXT:    ubfiz x14, x30, #29, #1
-; CHECK-NEXT:    mov z2.b, z0.b[32]
+; CHECK-NEXT:    mov z3.b, z0.b[32]
 ; CHECK-NEXT:    orr x9, x9, x10
 ; CHECK-NEXT:    orr x8, x8, x13
 ; CHECK-NEXT:    ubfiz x10, x12, #30, #1
-; CHECK-NEXT:    fmov w12, s3
+; CHECK-NEXT:    fmov w12, s2
 ; CHECK-NEXT:    orr x9, x9, x11
 ; CHECK-NEXT:    orr x8, x8, x14
 ; CHECK-NEXT:    mov z1.b, z0.b[33]
 ; CHECK-NEXT:    orr x9, x22, x9
 ; CHECK-NEXT:    orr x8, x8, x10
-; CHECK-NEXT:    orr x8, x9, x8
-; CHECK-NEXT:    fmov w9, s2
-; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    mov z2.b, z0.b[34]
+; CHECK-NEXT:    orr x8, x9, x8
+; CHECK-NEXT:    fmov w9, s3
+; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    and w9, w9, #0x1
 ; CHECK-NEXT:    orr x8, x8, x9, lsl #32
@@ -23356,8 +23356,8 @@ define void @masked_load_zext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    uzp1 z0.b, z0.b, z0.b
 ; CHECK-NEXT:    umov w12, v0.b[1]
 ; CHECK-NEXT:    fmov w22, s0
-; CHECK-NEXT:    mov z6.b, z0.b[18]
-; CHECK-NEXT:    mov z2.b, z0.b[19]
+; CHECK-NEXT:    mov z7.b, z0.b[18]
+; CHECK-NEXT:    mov z3.b, z0.b[19]
 ; CHECK-NEXT:    umov w13, v0.b[2]
 ; CHECK-NEXT:    umov w14, v0.b[7]
 ; CHECK-NEXT:    umov w3, v0.b[8]
@@ -23367,9 +23367,9 @@ define void @masked_load_zext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    and x22, x22, #0x1
 ; CHECK-NEXT:    umov w11, v0.b[3]
 ; CHECK-NEXT:    umov w5, v0.b[10]
-; CHECK-NEXT:    mov z7.b, z0.b[22]
-; CHECK-NEXT:    fmov w19, s6
-; CHECK-NEXT:    fmov w20, s2
+; CHECK-NEXT:    mov z5.b, z0.b[22]
+; CHECK-NEXT:    fmov w19, s7
+; CHECK-NEXT:    fmov w20, s3
 ; CHECK-NEXT:    bfi x22, x12, #1, #1
 ; CHECK-NEXT:    mov z16.b, z0.b[23]
 ; CHECK-NEXT:    fmov w21, s1
@@ -23381,7 +23381,7 @@ define void @masked_load_zext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x3, x3, #8, #1
 ; CHECK-NEXT:    umov w17, v0.b[12]
 ; CHECK-NEXT:    mov z17.b, z0.b[24]
-; CHECK-NEXT:    fmov w24, s7
+; CHECK-NEXT:    fmov w24, s5
 ; CHECK-NEXT:    ubfiz x4, x4, #9, #1
 ; CHECK-NEXT:    ubfiz x19, x19, #18, #1
 ; CHECK-NEXT:    ubfiz x20, x20, #19, #1
@@ -23400,7 +23400,7 @@ define void @masked_load_zext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x4, x23, #21, #1
 ; CHECK-NEXT:    umov w8, v0.b[6]
 ; CHECK-NEXT:    umov w1, v0.b[15]
-; CHECK-NEXT:    mov z5.b, z0.b[17]
+; CHECK-NEXT:    mov z6.b, z0.b[17]
 ; CHECK-NEXT:    mov z20.b, z0.b[27]
 ; CHECK-NEXT:    fmov w26, s17
 ; CHECK-NEXT:    orr x11, x14, x3
@@ -23408,7 +23408,7 @@ define void @masked_load_zext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    ubfiz x15, x15, #11, #1
 ; CHECK-NEXT:    ubfiz x3, x24, #22, #1
 ; CHECK-NEXT:    bfi x22, x10, #4, #1
-; CHECK-NEXT:    mov z3.b, z0.b[16]
+; CHECK-NEXT:    mov z2.b, z0.b[16]
 ; CHECK-NEXT:    mov z21.b, z0.b[28]
 ; CHECK-NEXT:    fmov w12, s18
 ; CHECK-NEXT:    orr x14, x14, x4
@@ -23420,14 +23420,14 @@ define void @masked_load_zext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    orr x14, x14, x3
 ; CHECK-NEXT:    ubfiz x15, x18, #13, #1
 ; CHECK-NEXT:    bfi x22, x9, #5, #1
-; CHECK-NEXT:    fmov w7, s5
-; CHECK-NEXT:    mov z5.b, z0.b[30]
+; CHECK-NEXT:    fmov w7, s6
+; CHECK-NEXT:    mov z6.b, z0.b[30]
 ; CHECK-NEXT:    fmov w28, s20
 ; CHECK-NEXT:    orr x10, x11, x10
 ; CHECK-NEXT:    orr x9, x14, x17
 ; CHECK-NEXT:    ubfiz x11, x16, #14, #1
 ; CHECK-NEXT:    ubfiz x14, x26, #24, #1
-; CHECK-NEXT:    fmov w6, s3
+; CHECK-NEXT:    fmov w6, s2
 ; CHECK-NEXT:    fmov w29, s21
 ; CHECK-NEXT:    orr x10, x10, x15
 ; CHECK-NEXT:    bfi x22, x8, #6, #1
@@ -23437,31 +23437,31 @@ define void @masked_load_zext_v64i16i32(ptr %ap, ptr %bp, ptr %c) vscale_range(1
 ; CHECK-NEXT:    orr x10, x10, x11
 ; CHECK-NEXT:    orr x9, x9, x14
 ; CHECK-NEXT:    ubfiz x11, x27, #26, #1
-; CHECK-NEXT:    fmov w13, s5
+; CHECK-NEXT:    fmov w13, s6
 ; CHECK-NEXT:    orr x8, x10, x8
 ; CHECK-NEXT:    orr x9, x9, x12
 ; CHECK-NEXT:    ubfiz x10, x28, #27, #1
-; CHECK-NEXT:    mov z3.b, z0.b[31]
+; CHECK-NEXT:    mov z2.b, z0.b[31]
 ; CHECK-NEXT:    orr x9, x9, x11
 ; CHECK-NEXT:    ubfiz x11, x6, #16, #1
 ; CHECK-NEXT:    ubfiz x12, x29, #28, #1
 ; CHECK-NEXT:    orr x9, x9, x10
 ; CHECK-NEXT:    ubfiz x10, x7, #17, #1
 ; CHECK-NEXT:    ubfiz x14, x30, #29, #1
-; CHECK-NEXT:    mov z2.b, z0.b[32]
+; CHECK-NEXT:    mov z3.b, z0.b[32]
 ; CHECK-NEXT:    orr x8, x8, x11
 ; CHECK-NEXT:    orr x9, x9, x12
 ; CHECK-NEXT:    ubfiz x11, x13, #30, #1
-; CHECK-NEXT:    fmov w12, s3
+; CHECK-NEXT:    fmov w12, s2
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    orr x9, x9, x14
 ; CHECK-NEXT:    mov z1.b, z0.b[33]
 ; CHECK-NEXT:    orr x8, x22, x8
 ; CHECK-NEXT:    orr x9, x9, x11
-; CHECK-NEXT:    orr x8, x8, x9
-; CHECK-NEXT:    fmov w9, s2
-; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    mov z2.b, z0.b[34]
+; CHECK-NEXT:    orr x8, x8, x9
+; CHECK-NEXT:    fmov w9, s3
+; CHECK-NEXT:    lsl w10, w12, #31
 ; CHECK-NEXT:    orr x8, x8, x10
 ; CHECK-NEXT:    and w9, w9, #0x1
 ; CHECK-NEXT:    orr x8, x8, x9, lsl #32

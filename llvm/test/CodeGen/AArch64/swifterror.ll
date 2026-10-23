@@ -34,8 +34,8 @@ define float @foo(ptr swifterror %error_ptr_ref) {
 ; CHECK-O0-AARCH64-NEXT:    .cfi_def_cfa w29, 16
 ; CHECK-O0-AARCH64-NEXT:    .cfi_offset w30, -8
 ; CHECK-O0-AARCH64-NEXT:    .cfi_offset w29, -16
-; CHECK-O0-AARCH64-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-AARCH64-NEXT:    mov w0, w8
+; CHECK-O0-AARCH64-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-AARCH64-NEXT:    bl _malloc
 ; CHECK-O0-AARCH64-NEXT:    mov x21, x0
 ; CHECK-O0-AARCH64-NEXT:    mov w8, #1 ; =0x1
@@ -49,8 +49,8 @@ define float @foo(ptr swifterror %error_ptr_ref) {
 ; CHECK-O0-ARM64_32-NEXT:    str x30, [sp, #-16]! ; 8-byte Folded Spill
 ; CHECK-O0-ARM64_32-NEXT:    .cfi_def_cfa_offset 16
 ; CHECK-O0-ARM64_32-NEXT:    .cfi_offset w30, -16
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-ARM64_32-NEXT:    mov w0, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-ARM64_32-NEXT:    bl _malloc
 ; CHECK-O0-ARM64_32-NEXT:    mov x21, x0
 ; CHECK-O0-ARM64_32-NEXT:    mov w8, #1 ; =0x1
@@ -436,8 +436,8 @@ define float @foo_if(ptr swifterror %error_ptr_ref, i32 %cc) {
 ; CHECK-O0-AARCH64-NEXT:    str x21, [sp, #8] ; 8-byte Spill
 ; CHECK-O0-AARCH64-NEXT:    cbz w0, LBB3_2
 ; CHECK-O0-AARCH64-NEXT:  ; %bb.1: ; %gen_error
-; CHECK-O0-AARCH64-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-AARCH64-NEXT:    mov w0, w8
+; CHECK-O0-AARCH64-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-AARCH64-NEXT:    bl _malloc
 ; CHECK-O0-AARCH64-NEXT:    mov x21, x0
 ; CHECK-O0-AARCH64-NEXT:    mov w8, #1 ; =0x1
@@ -462,8 +462,8 @@ define float @foo_if(ptr swifterror %error_ptr_ref, i32 %cc) {
 ; CHECK-O0-ARM64_32-NEXT:    str x21, [sp, #8] ; 8-byte Spill
 ; CHECK-O0-ARM64_32-NEXT:    cbz w0, LBB3_2
 ; CHECK-O0-ARM64_32-NEXT:  ; %bb.1: ; %gen_error
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-ARM64_32-NEXT:    mov w0, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-ARM64_32-NEXT:    bl _malloc
 ; CHECK-O0-ARM64_32-NEXT:    mov x21, x0
 ; CHECK-O0-ARM64_32-NEXT:    mov w8, #1 ; =0x1
@@ -559,8 +559,8 @@ define float @foo_loop(ptr swifterror %error_ptr_ref, i32 %cc, float %cc2) {
 ; CHECK-O0-AARCH64-NEXT:    cbz w8, LBB4_3
 ; CHECK-O0-AARCH64-NEXT:  ; %bb.2: ; %gen_error
 ; CHECK-O0-AARCH64-NEXT:    ; in Loop: Header=BB4_1 Depth=1
-; CHECK-O0-AARCH64-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-AARCH64-NEXT:    mov w0, w8
+; CHECK-O0-AARCH64-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-AARCH64-NEXT:    bl _malloc
 ; CHECK-O0-AARCH64-NEXT:    mov x9, x0
 ; CHECK-O0-AARCH64-NEXT:    mov w8, #1 ; =0x1
@@ -600,8 +600,8 @@ define float @foo_loop(ptr swifterror %error_ptr_ref, i32 %cc, float %cc2) {
 ; CHECK-O0-ARM64_32-NEXT:    cbz w8, LBB4_3
 ; CHECK-O0-ARM64_32-NEXT:  ; %bb.2: ; %gen_error
 ; CHECK-O0-ARM64_32-NEXT:    ; in Loop: Header=BB4_1 Depth=1
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-ARM64_32-NEXT:    mov w0, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-ARM64_32-NEXT:    bl _malloc
 ; CHECK-O0-ARM64_32-NEXT:    mov x9, x0
 ; CHECK-O0-ARM64_32-NEXT:    mov x0, x9
@@ -688,8 +688,8 @@ define void @foo_sret(ptr sret(%struct.S) %agg.result, i32 %val1, ptr swifterror
 ; CHECK-O0-AARCH64-NEXT:    .cfi_offset w29, -16
 ; CHECK-O0-AARCH64-NEXT:    stur w0, [x29, #-4] ; 4-byte Folded Spill
 ; CHECK-O0-AARCH64-NEXT:    str x8, [sp] ; 8-byte Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-AARCH64-NEXT:    mov w0, w8
+; CHECK-O0-AARCH64-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-AARCH64-NEXT:    bl _malloc
 ; CHECK-O0-AARCH64-NEXT:    ldr x8, [sp] ; 8-byte Reload
 ; CHECK-O0-AARCH64-NEXT:    mov x10, x0
@@ -710,8 +710,8 @@ define void @foo_sret(ptr sret(%struct.S) %agg.result, i32 %val1, ptr swifterror
 ; CHECK-O0-ARM64_32-NEXT:    .cfi_offset w30, -16
 ; CHECK-O0-ARM64_32-NEXT:    str w0, [sp, #12] ; 4-byte Spill
 ; CHECK-O0-ARM64_32-NEXT:    str x8, [sp] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-ARM64_32-NEXT:    mov w0, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-ARM64_32-NEXT:    bl _malloc
 ; CHECK-O0-ARM64_32-NEXT:    ldr x8, [sp] ; 8-byte Reload
 ; CHECK-O0-ARM64_32-NEXT:    mov x10, x0
@@ -931,8 +931,8 @@ define float @foo_vararg(ptr swifterror %error_ptr_ref, ...) {
 ; CHECK-O0-AARCH64-NEXT:    .cfi_def_cfa w29, 16
 ; CHECK-O0-AARCH64-NEXT:    .cfi_offset w30, -8
 ; CHECK-O0-AARCH64-NEXT:    .cfi_offset w29, -16
-; CHECK-O0-AARCH64-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-AARCH64-NEXT:    mov w0, w8
+; CHECK-O0-AARCH64-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-AARCH64-NEXT:    bl _malloc
 ; CHECK-O0-AARCH64-NEXT:    mov x21, x0
 ; CHECK-O0-AARCH64-NEXT:    mov w8, #1 ; =0x1
@@ -996,8 +996,8 @@ define float @foo_vararg(ptr swifterror %error_ptr_ref, ...) {
 ; CHECK-O0-ARM64_32-NEXT:    str x30, [sp, #32] ; 8-byte Spill
 ; CHECK-O0-ARM64_32-NEXT:    .cfi_def_cfa_offset 48
 ; CHECK-O0-ARM64_32-NEXT:    .cfi_offset w30, -16
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #16 ; =0x10
-; CHECK-O0-ARM64_32-NEXT:    mov w0, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w0, #16 ; =0x10
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-ARM64_32-NEXT:    bl _malloc
 ; CHECK-O0-ARM64_32-NEXT:    mov x21, x0
 ; CHECK-O0-ARM64_32-NEXT:    mov w8, #1 ; =0x1
@@ -1515,22 +1515,22 @@ define swiftcc void @params_in_reg(i64, i64, i64, i64, i64, i64, i64, i64, ptr s
 ; CHECK-O0-AARCH64-NEXT:    ; implicit-def: $x0
 ; CHECK-O0-AARCH64-NEXT:    mov x20, xzr
 ; CHECK-O0-AARCH64-NEXT:    mov x21, x20
-; CHECK-O0-AARCH64-NEXT:    mov w8, #1 ; =0x1
-; CHECK-O0-AARCH64-NEXT:    mov w0, w8
-; CHECK-O0-AARCH64-NEXT:    mov w8, #2 ; =0x2
-; CHECK-O0-AARCH64-NEXT:    mov w1, w8
-; CHECK-O0-AARCH64-NEXT:    mov w8, #3 ; =0x3
-; CHECK-O0-AARCH64-NEXT:    mov w2, w8
-; CHECK-O0-AARCH64-NEXT:    mov w8, #4 ; =0x4
-; CHECK-O0-AARCH64-NEXT:    mov w3, w8
-; CHECK-O0-AARCH64-NEXT:    mov w8, #5 ; =0x5
-; CHECK-O0-AARCH64-NEXT:    mov w4, w8
-; CHECK-O0-AARCH64-NEXT:    mov w8, #6 ; =0x6
-; CHECK-O0-AARCH64-NEXT:    mov w5, w8
-; CHECK-O0-AARCH64-NEXT:    mov w8, #7 ; =0x7
-; CHECK-O0-AARCH64-NEXT:    mov w6, w8
-; CHECK-O0-AARCH64-NEXT:    mov w8, #8 ; =0x8
-; CHECK-O0-AARCH64-NEXT:    mov w7, w8
+; CHECK-O0-AARCH64-NEXT:    mov w0, #1 ; =0x1
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w0 killed $w0 def $x0
+; CHECK-O0-AARCH64-NEXT:    mov w1, #2 ; =0x2
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w1 killed $w1 def $x1
+; CHECK-O0-AARCH64-NEXT:    mov w2, #3 ; =0x3
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w2 killed $w2 def $x2
+; CHECK-O0-AARCH64-NEXT:    mov w3, #4 ; =0x4
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w3 killed $w3 def $x3
+; CHECK-O0-AARCH64-NEXT:    mov w4, #5 ; =0x5
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w4 killed $w4 def $x4
+; CHECK-O0-AARCH64-NEXT:    mov w5, #6 ; =0x6
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w5 killed $w5 def $x5
+; CHECK-O0-AARCH64-NEXT:    mov w6, #7 ; =0x7
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w6 killed $w6 def $x6
+; CHECK-O0-AARCH64-NEXT:    mov w7, #8 ; =0x8
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w7 killed $w7 def $x7
 ; CHECK-O0-AARCH64-NEXT:    bl _params_in_reg2
 ; CHECK-O0-AARCH64-NEXT:    ldr x20, [sp, #8] ; 8-byte Reload
 ; CHECK-O0-AARCH64-NEXT:    ldr x0, [sp, #16] ; 8-byte Reload
@@ -1569,22 +1569,22 @@ define swiftcc void @params_in_reg(i64, i64, i64, i64, i64, i64, i64, i64, ptr s
 ; CHECK-O0-ARM64_32-NEXT:    ; implicit-def: $x0
 ; CHECK-O0-ARM64_32-NEXT:    mov x20, xzr
 ; CHECK-O0-ARM64_32-NEXT:    mov x21, x20
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #1 ; =0x1
-; CHECK-O0-ARM64_32-NEXT:    mov w0, w8
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #2 ; =0x2
-; CHECK-O0-ARM64_32-NEXT:    mov w1, w8
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #3 ; =0x3
-; CHECK-O0-ARM64_32-NEXT:    mov w2, w8
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #4 ; =0x4
-; CHECK-O0-ARM64_32-NEXT:    mov w3, w8
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #5 ; =0x5
-; CHECK-O0-ARM64_32-NEXT:    mov w4, w8
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #6 ; =0x6
-; CHECK-O0-ARM64_32-NEXT:    mov w5, w8
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #7 ; =0x7
-; CHECK-O0-ARM64_32-NEXT:    mov w6, w8
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #8 ; =0x8
-; CHECK-O0-ARM64_32-NEXT:    mov w7, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w0, #1 ; =0x1
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w0 killed $w0 def $x0
+; CHECK-O0-ARM64_32-NEXT:    mov w1, #2 ; =0x2
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w1 killed $w1 def $x1
+; CHECK-O0-ARM64_32-NEXT:    mov w2, #3 ; =0x3
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w2 killed $w2 def $x2
+; CHECK-O0-ARM64_32-NEXT:    mov w3, #4 ; =0x4
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w3 killed $w3 def $x3
+; CHECK-O0-ARM64_32-NEXT:    mov w4, #5 ; =0x5
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w4 killed $w4 def $x4
+; CHECK-O0-ARM64_32-NEXT:    mov w5, #6 ; =0x6
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w5 killed $w5 def $x5
+; CHECK-O0-ARM64_32-NEXT:    mov w6, #7 ; =0x7
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w6 killed $w6 def $x6
+; CHECK-O0-ARM64_32-NEXT:    mov w7, #8 ; =0x8
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w7 killed $w7 def $x7
 ; CHECK-O0-ARM64_32-NEXT:    bl _params_in_reg2
 ; CHECK-O0-ARM64_32-NEXT:    ldr x20, [sp, #8] ; 8-byte Reload
 ; CHECK-O0-ARM64_32-NEXT:    ldr x0, [sp, #16] ; 8-byte Reload
@@ -1725,29 +1725,29 @@ define swiftcc { i64, i64, i64, i64, i64, i64, i64, i64 } @params_and_return_in_
 ; CHECK-O0-AARCH64-NEXT:    mov x20, xzr
 ; CHECK-O0-AARCH64-NEXT:    str x20, [sp, #80] ; 8-byte Spill
 ; CHECK-O0-AARCH64-NEXT:    mov x21, x20
-; CHECK-O0-AARCH64-NEXT:    mov w8, #1 ; =0x1
-; CHECK-O0-AARCH64-NEXT:    mov w0, w8
+; CHECK-O0-AARCH64-NEXT:    mov w0, #1 ; =0x1
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-AARCH64-NEXT:    str x0, [sp, #88] ; 8-byte Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #2 ; =0x2
-; CHECK-O0-AARCH64-NEXT:    mov w1, w8
+; CHECK-O0-AARCH64-NEXT:    mov w1, #2 ; =0x2
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w1 killed $w1 def $x1
 ; CHECK-O0-AARCH64-NEXT:    str x1, [sp, #96] ; 8-byte Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #3 ; =0x3
-; CHECK-O0-AARCH64-NEXT:    mov w2, w8
+; CHECK-O0-AARCH64-NEXT:    mov w2, #3 ; =0x3
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w2 killed $w2 def $x2
 ; CHECK-O0-AARCH64-NEXT:    str x2, [sp, #104] ; 8-byte Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #4 ; =0x4
-; CHECK-O0-AARCH64-NEXT:    mov w3, w8
+; CHECK-O0-AARCH64-NEXT:    mov w3, #4 ; =0x4
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w3 killed $w3 def $x3
 ; CHECK-O0-AARCH64-NEXT:    str x3, [sp, #112] ; 8-byte Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #5 ; =0x5
-; CHECK-O0-AARCH64-NEXT:    mov w4, w8
+; CHECK-O0-AARCH64-NEXT:    mov w4, #5 ; =0x5
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w4 killed $w4 def $x4
 ; CHECK-O0-AARCH64-NEXT:    str x4, [sp, #120] ; 8-byte Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #6 ; =0x6
-; CHECK-O0-AARCH64-NEXT:    mov w5, w8
+; CHECK-O0-AARCH64-NEXT:    mov w5, #6 ; =0x6
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w5 killed $w5 def $x5
 ; CHECK-O0-AARCH64-NEXT:    str x5, [sp, #128] ; 8-byte Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #7 ; =0x7
-; CHECK-O0-AARCH64-NEXT:    mov w6, w8
+; CHECK-O0-AARCH64-NEXT:    mov w6, #7 ; =0x7
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w6 killed $w6 def $x6
 ; CHECK-O0-AARCH64-NEXT:    stur x6, [x29, #-120] ; 8-byte Folded Spill
-; CHECK-O0-AARCH64-NEXT:    mov w8, #8 ; =0x8
-; CHECK-O0-AARCH64-NEXT:    mov w7, w8
+; CHECK-O0-AARCH64-NEXT:    mov w7, #8 ; =0x8
+; CHECK-O0-AARCH64-NEXT:    ; kill: def $w7 killed $w7 def $x7
 ; CHECK-O0-AARCH64-NEXT:    stur x7, [x29, #-112] ; 8-byte Folded Spill
 ; CHECK-O0-AARCH64-NEXT:    bl _params_in_reg2
 ; CHECK-O0-AARCH64-NEXT:    ldr x20, [sp] ; 8-byte Reload
@@ -1830,29 +1830,29 @@ define swiftcc { i64, i64, i64, i64, i64, i64, i64, i64 } @params_and_return_in_
 ; CHECK-O0-ARM64_32-NEXT:    mov x20, xzr
 ; CHECK-O0-ARM64_32-NEXT:    str x20, [sp, #80] ; 8-byte Spill
 ; CHECK-O0-ARM64_32-NEXT:    mov x21, x20
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #1 ; =0x1
-; CHECK-O0-ARM64_32-NEXT:    mov w0, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w0, #1 ; =0x1
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w0 killed $w0 def $x0
 ; CHECK-O0-ARM64_32-NEXT:    str x0, [sp, #88] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #2 ; =0x2
-; CHECK-O0-ARM64_32-NEXT:    mov w1, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w1, #2 ; =0x2
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w1 killed $w1 def $x1
 ; CHECK-O0-ARM64_32-NEXT:    str x1, [sp, #96] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #3 ; =0x3
-; CHECK-O0-ARM64_32-NEXT:    mov w2, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w2, #3 ; =0x3
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w2 killed $w2 def $x2
 ; CHECK-O0-ARM64_32-NEXT:    str x2, [sp, #104] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #4 ; =0x4
-; CHECK-O0-ARM64_32-NEXT:    mov w3, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w3, #4 ; =0x4
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w3 killed $w3 def $x3
 ; CHECK-O0-ARM64_32-NEXT:    str x3, [sp, #112] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #5 ; =0x5
-; CHECK-O0-ARM64_32-NEXT:    mov w4, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w4, #5 ; =0x5
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w4 killed $w4 def $x4
 ; CHECK-O0-ARM64_32-NEXT:    str x4, [sp, #120] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #6 ; =0x6
-; CHECK-O0-ARM64_32-NEXT:    mov w5, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w5, #6 ; =0x6
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w5 killed $w5 def $x5
 ; CHECK-O0-ARM64_32-NEXT:    str x5, [sp, #128] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #7 ; =0x7
-; CHECK-O0-ARM64_32-NEXT:    mov w6, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w6, #7 ; =0x7
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w6 killed $w6 def $x6
 ; CHECK-O0-ARM64_32-NEXT:    str x6, [sp, #136] ; 8-byte Spill
-; CHECK-O0-ARM64_32-NEXT:    mov w8, #8 ; =0x8
-; CHECK-O0-ARM64_32-NEXT:    mov w7, w8
+; CHECK-O0-ARM64_32-NEXT:    mov w7, #8 ; =0x8
+; CHECK-O0-ARM64_32-NEXT:    ; kill: def $w7 killed $w7 def $x7
 ; CHECK-O0-ARM64_32-NEXT:    str x7, [sp, #144] ; 8-byte Spill
 ; CHECK-O0-ARM64_32-NEXT:    bl _params_in_reg2
 ; CHECK-O0-ARM64_32-NEXT:    ldr x20, [sp] ; 8-byte Reload

@@ -13,7 +13,7 @@ define void @compare_and_swap128() {
 ; CHECK-NEXT:    // implicit-def: $x9
 ; CHECK-NEXT:    mov w9, w10
 ; CHECK-NEXT:    mov w8, w8
-; CHECK-NEXT:    // kill: def $x8 killed $w8
+; CHECK-NEXT:    // kill: def $w8 killed $w8 def $x8
 ; CHECK-NEXT:    orr x8, x8, x9, lsl #32
 ; CHECK-NEXT:    // implicit-def: $x9
 ; CHECK-NEXT:    str x8, [x9]

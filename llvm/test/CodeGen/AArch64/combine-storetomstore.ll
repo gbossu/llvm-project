@@ -562,7 +562,7 @@ define void @test_masked_store_success_v64i8(<64 x i8> %x, ptr %ptr, <64 x i1> %
 ; SVE-NEXT:    fmov s6, w1
 ; SVE-NEXT:    ldr w11, [sp, #88]
 ; SVE-NEXT:    ldr w10, [sp, #224]
-; SVE-NEXT:    ptrue p0.b, vl16
+; SVE-NEXT:    ptrue p1.b, vl16
 ; SVE-NEXT:    fmov s5, w8
 ; SVE-NEXT:    fmov s4, w9
 ; SVE-NEXT:    ldr w8, [sp, #352]
@@ -688,16 +688,16 @@ define void @test_masked_store_success_v64i8(<64 x i8> %x, ptr %ptr, <64 x i1> %
 ; SVE-NEXT:    shl v5.16b, v5.16b, #7
 ; SVE-NEXT:    shl v4.16b, v4.16b, #7
 ; SVE-NEXT:    shl v7.16b, v7.16b, #7
-; SVE-NEXT:    cmpne p1.b, p0/z, z5.b, #0
+; SVE-NEXT:    cmpne p2.b, p1/z, z5.b, #0
 ; SVE-NEXT:    shl v5.16b, v6.16b, #7
-; SVE-NEXT:    cmpne p2.b, p0/z, z4.b, #0
-; SVE-NEXT:    cmpne p3.b, p0/z, z7.b, #0
-; SVE-NEXT:    cmpne p4.b, p0/z, z5.b, #0
-; SVE-NEXT:    st1b { z2.b }, p1, [x0, x8]
+; SVE-NEXT:    cmpne p3.b, p1/z, z4.b, #0
+; SVE-NEXT:    cmpne p0.b, p1/z, z7.b, #0
+; SVE-NEXT:    cmpne p1.b, p1/z, z5.b, #0
+; SVE-NEXT:    st1b { z2.b }, p2, [x0, x8]
 ; SVE-NEXT:    mov w8, #16 // =0x10
-; SVE-NEXT:    st1b { z3.b }, p2, [x0, x9]
-; SVE-NEXT:    st1b { z1.b }, p3, [x0, x8]
-; SVE-NEXT:    st1b { z0.b }, p4, [x0]
+; SVE-NEXT:    st1b { z3.b }, p3, [x0, x9]
+; SVE-NEXT:    st1b { z1.b }, p0, [x0, x8]
+; SVE-NEXT:    st1b { z0.b }, p1, [x0]
 ; SVE-NEXT:    ldr x29, [sp], #16 // 8-byte Folded Reload
 ; SVE-NEXT:    ret
   %load = load <64 x i8>, ptr %ptr, align 32

@@ -2756,10 +2756,10 @@ def gi_trunc_imm : GICustomOperandRenderer<"renderTruncImm">,
   GISDNodeXFormEquiv<trunc_imm>;
 
 let Predicates = [OptimizedGISelOrOtherSelector] in {
-// The SUBREG_TO_REG isn't eliminated at -O0, which can result in pointless
-// copies.
+// Keep this pattern out of unoptimized GlobalISel, where the subregister
+// construction can leave pointless copies.
 def : Pat<(i64 i64imm_32bit:$src),
-          (SUBREG_TO_REG (MOVi32imm (trunc_imm imm:$src)), sub_32)>;
+          (REG_SEQUENCE GPR64, (MOVi32imm (trunc_imm imm:$src)), sub_32)>;
 }
 
 // Materialize FP constants via MOVi32imm/MOVi64imm (MachO large code model).
@@ -3422,7 +3422,7 @@ def : Pat<(not logical_shifted_reg64:$Rm_and_shift),
 // Emit (and 0xFFFFFFFF) as a ORRWrr move which may be eliminated.
 let AddedComplexity = 6 in
 def : Pat<(i64 (and GPR64:$Rn, 0xffffffff)),
-          (SUBREG_TO_REG (ORRWrr WZR, (EXTRACT_SUBREG GPR64:$Rn, sub_32)), sub_32)>;
+          (REG_SEQUENCE GPR64, (ORRWrr WZR, (EXTRACT_SUBREG GPR64:$Rn, sub_32)), sub_32)>;
 
 //===----------------------------------------------------------------------===//
 // One operand data processing instructions.
@@ -10947,10 +10947,9 @@ def SHA256SU0rr : SHATiedInstVV<0b0010, "sha256su0",int_aarch64_crypto_sha256su0
 def : Pat<(i64 (anyext GPR32:$src)),
           (INSERT_SUBREG (i64 (IMPLICIT_DEF)), GPR32:$src, sub_32)>;
 
-// When we need to explicitly zero-extend, we use a 32-bit MOV instruction and
-// then assert the extension has happened.
+// A 32-bit MOV clears the upper half of the X register.
 def : Pat<(i64 (zext GPR32:$src)),
-          (SUBREG_TO_REG (ORRWrs WZR, GPR32:$src, 0), sub_32)>;
+          (REG_SEQUENCE GPR64, (ORRWrs WZR, GPR32:$src, 0), sub_32)>;
 
 // To sign extend, we use a signed bitfield move instruction (SBFM) on the
 // containing super-reg.

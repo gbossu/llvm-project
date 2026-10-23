@@ -393,8 +393,8 @@ body:             |
     ; CHECK-NEXT: {{  $}}
     ; CHECK-NEXT: [[COPY:%[0-9]+]]:gpr64 = COPY $x0
     ; CHECK-NEXT: [[MOVi32imm:%[0-9]+]]:gpr32 = MOVi32imm 7
-    ; CHECK-NEXT: [[SUBREG_TO_REG:%[0-9]+]]:gpr64 = SUBREG_TO_REG [[MOVi32imm]], %subreg.sub_32
-    ; CHECK-NEXT: [[MADDXrrr:%[0-9]+]]:gpr64 = MADDXrrr [[SUBREG_TO_REG]], [[COPY]], $xzr
+    ; CHECK-NEXT: [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[MOVi32imm]], %subreg.sub_32
+    ; CHECK-NEXT: [[MADDXrrr:%[0-9]+]]:gpr64 = MADDXrrr [[REG_SEQUENCE]], [[COPY]], $xzr
     ; CHECK-NEXT: [[COPY1:%[0-9]+]]:gpr64sp = COPY $x1
     ; CHECK-NEXT: [[LDRDroX:%[0-9]+]]:fpr64 = LDRDroX [[COPY1]], [[MADDXrrr]], 0, 0 :: (load (s64) from %ir.addr)
     ; CHECK-NEXT: $d2 = COPY [[LDRDroX]]
@@ -427,8 +427,8 @@ body:             |
     ; CHECK-NEXT: {{  $}}
     ; CHECK-NEXT: [[COPY:%[0-9]+]]:gpr64 = COPY $x0
     ; CHECK-NEXT: [[MOVi32imm:%[0-9]+]]:gpr32 = MOVi32imm 16
-    ; CHECK-NEXT: [[SUBREG_TO_REG:%[0-9]+]]:gpr64 = SUBREG_TO_REG [[MOVi32imm]], %subreg.sub_32
-    ; CHECK-NEXT: [[MADDXrrr:%[0-9]+]]:gpr64 = MADDXrrr [[SUBREG_TO_REG]], [[COPY]], $xzr
+    ; CHECK-NEXT: [[REG_SEQUENCE:%[0-9]+]]:gpr64 = REG_SEQUENCE [[MOVi32imm]], %subreg.sub_32
+    ; CHECK-NEXT: [[MADDXrrr:%[0-9]+]]:gpr64 = MADDXrrr [[REG_SEQUENCE]], [[COPY]], $xzr
     ; CHECK-NEXT: [[COPY1:%[0-9]+]]:gpr64sp = COPY $x1
     ; CHECK-NEXT: [[LDRDroX:%[0-9]+]]:fpr64 = LDRDroX [[COPY1]], [[MADDXrrr]], 0, 0 :: (load (s64) from %ir.addr)
     ; CHECK-NEXT: $d2 = COPY [[LDRDroX]]

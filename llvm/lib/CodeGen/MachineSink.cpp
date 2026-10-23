@@ -406,8 +406,10 @@ bool MachineSinking::PerformTrivialForwardCoalescing(MachineInstr &MI,
 
 bool MachineSinking::PerformSinkAndFold(MachineInstr &MI,
                                         MachineBasicBlock *MBB) {
+  // A single-input REG_SEQUENCE can be folded if the target supports it.
   if (MI.isCopy() || MI.mayLoadOrStore() ||
-      MI.getOpcode() == TargetOpcode::REG_SEQUENCE)
+      (MI.getOpcode() == TargetOpcode::REG_SEQUENCE &&
+       MI.getNumOperands() != 3))
     return false;
 
   // Don't sink instructions that the target prefers not to sink.
@@ -498,6 +500,9 @@ bool MachineSinking::PerformSinkAndFold(MachineInstr &MI,
           Worklist.push_back(DstReg);
           continue;
         }
+        // REG_SEQUENCE cannot be rematerialized into a physical register.
+        if (MI.getOpcode() == TargetOpcode::REG_SEQUENCE)
+          return false;
         // If we are going to replace a copy, the original instruction must be
         // as cheap as a copy.
         if (!TII->isAsCheapAsAMove(MI))
